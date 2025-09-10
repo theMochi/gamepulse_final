@@ -3,8 +3,9 @@
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 
-export default function SettingsPage() {
+function SettingsPageContent() {
   const { data: session, update } = useSession();
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -171,3 +172,7 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(SettingsPageContent), {
+  ssr: false,
+});

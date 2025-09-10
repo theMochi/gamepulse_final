@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { IGDBGame } from '@/lib/igdb';
@@ -23,7 +23,7 @@ interface Genre {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function GamesPage() {
+function GamesPageContent() {
   const searchParams = useSearchParams();
   const [games, setGames] = useState<IGDBGame[]>([]);
   const [loading, setLoading] = useState(true);
@@ -227,5 +227,13 @@ export default function GamesPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function GamesPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GamesPageContent />
+    </Suspense>
   );
 }
