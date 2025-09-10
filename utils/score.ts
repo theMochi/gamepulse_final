@@ -1,8 +1,8 @@
 import { IGDBGame } from '@/lib/igdb';
 
 export function calculateCombinedScore(game: IGDBGame): number {
-  const rating = game.total_rating || game.aggregated_rating || 0;
-  const count = game.total_rating_count || game.aggregated_rating_count || 0;
+  const rating: number = game.total_rating || game.aggregated_rating || 0;
+  const count: number = game.total_rating_count || game.aggregated_rating_count || 0;
   
   if (rating === 0 || count === 0) return 0;
   
