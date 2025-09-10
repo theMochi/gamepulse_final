@@ -10,6 +10,12 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Stars } from '@/components/stars';
 import { ExternalLink, Play, Calendar, Users, Tag } from 'lucide-react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { PrismaClient } from '@prisma/client';
+import ReviewForm from '@/components/review-form';
+import FavoriteButton from '@/components/favorite-button';
+import ListButtons from '@/components/list-buttons';
 
 interface GamePageProps {
   params: {
@@ -29,6 +35,65 @@ export default async function GamePage({ params }: GamePageProps) {
   if (!game) {
     notFound();
   }
+
+  const session = await getServerSession(authOptions);
+  const prisma = new PrismaClient();
+
+  // Get user's review and list status if logged in
+  let userReview = null;
+  let isFavorited = false;
+  let listStatus = { inBacklog: false, inPlayed: false, inWishlist: false };
+
+  if (session) {
+    const userId = (session as any).userId;
+    
+    // Get user's review
+    userReview = await prisma.review.findFirst({
+      where: {
+        userId,
+        game: { igdbId: gameId }
+      }
+    });
+
+    // Get favorite status
+    const favorite = await prisma.favorite.findFirst({
+      where: {
+        userId,
+        game: { igdbId: gameId }
+      }
+    });
+    isFavorited = !!favorite;
+
+    // Get list status
+    const lists = await prisma.list.findMany({
+      where: { userId },
+      include: {
+        entries: {
+          where: {
+            game: { igdbId: gameId }
+          }
+        }
+      }
+    });
+
+    listStatus = {
+      inBacklog: lists.find(l => l.type === 'BACKLOG')?.entries.length > 0,
+      inPlayed: lists.find(l => l.type === 'PLAYED')?.entries.length > 0,
+      inWishlist: lists.find(l => l.type === 'WISHLIST')?.entries.length > 0,
+    };
+  }
+
+  // Get recent reviews for this game
+  const recentReviews = await prisma.review.findMany({
+    where: {
+      game: { igdbId: gameId }
+    },
+    include: {
+      user: { select: { id: true, username: true, image: true } }
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 10
+  });
 
   const coverUrl = getGameCoverLargeUrl(game.cover?.image_id);
   const rating = game.total_rating;
@@ -155,6 +220,21 @@ export default async function GamePage({ params }: GamePageProps) {
               </Button>
             )}
           </div>
+
+          {/* User Actions */}
+          {session && (
+            <div className="space-y-4 pt-4 border-t border-gray-200">
+              <div className="flex flex-wrap gap-2">
+                <FavoriteButton igdbId={gameId} isFavorited={isFavorited} />
+                <ListButtons 
+                  igdbId={gameId} 
+                  inBacklog={listStatus.inBacklog}
+                  inPlayed={listStatus.inPlayed}
+                  inWishlist={listStatus.inWishlist}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -217,10 +297,88 @@ export default async function GamePage({ params }: GamePageProps) {
               </CardContent>
             </Card>
           )}
+
         </div>
 
         {/* Sidebar */}
         <div className="space-y-6">
+          {/* Review Form - Prominent at top */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Rate & Review</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ReviewForm 
+                igdbId={gameId} 
+                existingReview={userReview ? {
+                  rating: userReview.rating,
+                  title: userReview.title || undefined,
+                  body: userReview.body || undefined
+                } : undefined}
+              />
+            </CardContent>
+          </Card>
+
+          {/* User Reviews */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Community Reviews</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {recentReviews.length > 0 ? (
+                recentReviews.map((review) => (
+                  <div key={review.id} className="border-b border-gray-200 pb-4 last:border-b-0">
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0">
+                        {review.user.image ? (
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src={review.user.image}
+                            alt={review.user.username}
+                          />
+                        ) : (
+                          <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
+                            <span className="text-sm font-bold text-gray-600">
+                              {review.user.username.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center space-x-2">
+                          <Link
+                            href={`/profile/${review.user.username}`}
+                            className="text-sm font-medium text-gray-900 hover:text-indigo-600"
+                          >
+                            {review.user.username}
+                          </Link>
+                          <div className="flex items-center">
+                            <span className="text-yellow-500 text-sm">★</span>
+                            <span className="ml-1 text-sm text-gray-600">{review.rating}/10</span>
+                          </div>
+                          <span className="text-xs text-gray-500">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        {review.title && (
+                          <h4 className="text-sm font-medium text-gray-900 mt-1">{review.title}</h4>
+                        )}
+                        {review.body && (
+                          <p className="text-sm text-gray-600 mt-1 line-clamp-3">{review.body}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-6">
+                  <p className="text-gray-500 text-sm">No reviews yet</p>
+                  <p className="text-gray-400 text-xs mt-1">Be the first to review this game!</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           {/* Game Details */}
           <Card>
             <CardHeader>
@@ -267,7 +425,7 @@ export default async function GamePage({ params }: GamePageProps) {
                   <div className="flex items-center gap-2">
                     <Stars rating={stars} size="sm" />
                     <span className="text-sm text-zinc-600">
-                      {Math.round(rating)}/100
+                      {Math.round(rating / 10)}/10
                     </span>
                     {ratingCount && (
                       <span className="text-xs text-zinc-500">

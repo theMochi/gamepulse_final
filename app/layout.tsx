@@ -4,6 +4,8 @@ import './globals.css'
 import Link from 'next/link'
 import { GlobalSearch } from '@/components/global-search'
 import { cn } from '@/lib/utils'
+import AuthSessionProvider from '@/components/session-provider'
+import AuthNav from '@/components/auth-nav'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className)}>
+        <AuthSessionProvider>
         <header className="border-b border-blue-200/40 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
@@ -46,6 +49,7 @@ export default function RootLayout({
                     Browse Games
                   </Link>
                 </nav>
+                <AuthNav />
               </div>
             </div>
           </div>
@@ -72,6 +76,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+        </AuthSessionProvider>
       </body>
     </html>
   )

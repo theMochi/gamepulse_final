@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  emailVerified DateTime?
+  hashedPassword String?
+  username      String   @unique
+  name          String?
+  image         String?  // avatar
+  bio           String?
+
+  // social
+  following     Follow[] @relation("following")
+  followers     Follow[] @relation("followers")
+
+  // content
+  favorites     Favorite[]
+  reviews       Review[]
+  lists         List[]
+
+  // next-auth
+  accounts      Account[]
+  sessions      Session[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Follow {
+  id        String @id @default(cuid())
+  follower  User   @relation("following", fields: [followerId], references: [id])
+  followerId String
+  following User   @relation("followers", fields: [followingId], references: [id])
+  followingId String
+  createdAt DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Game {
+  id        String  @id @default(cuid())
+  igdbId    Int     @unique
+  name      String
+  coverId   String? // igdb image_id
+  summary   String?
+  // denormalized snapshot so we can render even if IGDB call fails
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  favorites   Favorite[]
+  reviews     Review[]
+  listEntries ListEntry[]
+}
+
+model Favorite {
+  id      String @id @default(cuid())
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  game    Game   @relation(fields: [gameId], references: [id])
+  gameId  String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, gameId])
+}
+
+model Review {
+  id        String @id @default(cuid())
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String
+  game      Game   @relation(fields: [gameId], references: [id])
+  gameId    String
+  rating    Int    // 0..100 (same as total_rating scale)
+  title     String?
+  body      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, gameId])
+}
+
+enum ListType {
+  BACKLOG   // (Planning to play)
+  PLAYED
+  WISHLIST
+}
+
+model List {
+  id       String   @id @default(cuid())
+  user     User     @relation(fields: [userId], references: [id])
+  userId   String
+  name     String   // user-editable label
+  type     ListType
+  entries  ListEntry[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, type]) // one canonical list per type
+}
+
+model ListEntry {
+  id       String @id @default(cuid())
+  list     List   @relation(fields: [listId], references: [id])
+  listId   String
+  game     Game   @relation(fields: [gameId], references: [id])
+  gameId   String
+  note     String?
+  createdAt DateTime @default(now())
+
+  @@unique([listId, gameId])
+}
+
+/************** next-auth tables **************/
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

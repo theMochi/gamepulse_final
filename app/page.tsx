@@ -4,6 +4,10 @@ import { GameCard } from '@/components/game-card';
 import { GameCardSkeleton } from '@/components/game-card-skeleton';
 import { Section } from '@/components/section';
 import { Suspense } from 'react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { recentReviewsForFeed } from '@/lib/feed';
+import RecentReviews from '@/components/recent-reviews';
 
 async function FeaturedSection() {
   try {
@@ -103,7 +107,10 @@ function LoadingSection({ eyebrow, title, description }: { eyebrow?: string; tit
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await getServerSession(authOptions);
+  const feed = await recentReviewsForFeed((session as any)?.userId);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section with Enhanced Gradient */}
@@ -188,6 +195,12 @@ export default function HomePage() {
             <ComingSoonSection />
           </Suspense>
         </div>
+
+        {/* Section Separator */}
+        <div className="h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-12" />
+
+        {/* Recent Reviews Feed */}
+        <RecentReviews items={feed} />
       </div>
     </div>
   );

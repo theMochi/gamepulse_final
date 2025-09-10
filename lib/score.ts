@@ -8,7 +8,7 @@ export const compact = (n?: number) =>
   new Intl.NumberFormat('en', { notation: 'compact' }).format(n ?? 0);
 
 export const starsFromTotal = (total_rating?: number) =>
-  Math.max(0, Math.min(5, Math.round((total_rating ?? 0) / 20)));
+  Math.max(0, Math.min(10, Math.round((total_rating ?? 0) / 10)));
 
 // Utility for consistent date formatting
 export const fmtDate = (s?: number) => s ? new Date(s * 1000).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';

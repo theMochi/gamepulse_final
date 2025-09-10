@@ -2,7 +2,7 @@ import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface StarsProps {
-  rating: number; // 0-5 stars
+  rating: number; // 0-10 stars
   maxStars?: number;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
@@ -11,7 +11,7 @@ interface StarsProps {
 
 export function Stars({ 
   rating, 
-  maxStars = 5, 
+  maxStars = 10, 
   size = 'md', 
   className,
   showValue = false 
