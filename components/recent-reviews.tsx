@@ -5,7 +5,7 @@ interface Review {
   rating: number;
   title?: string | null;
   body?: string | null;
-  createdAt: string;
+  createdAt: Date;
   user: {
     id: string;
     username: string;
