@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { getGameCoverUrl } from '@/utils/img';
 
 interface Game {
-  id: number;
+  id: string;
   name: string;
   cover?: { image_id: string } | null;
 }
