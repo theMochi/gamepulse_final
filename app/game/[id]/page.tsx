@@ -102,7 +102,7 @@ export default async function GamePage({ params }: GamePageProps) {
   
   const platforms = game.platforms || [];
   const genres = game.genres || [];
-  const developers = game.involved_companies?.filter(ic => ic.developer && ic.company?.name) || [];
+  const developers = game.involved_companies?.filter((ic: any) => ic.developer && ic.company?.name) || [];
   const screenshots = game.screenshots || [];
   const trailer = game.videos?.[0];
   const officialSite = game.websites?.[0]; // First available website
@@ -157,7 +157,7 @@ export default async function GamePage({ params }: GamePageProps) {
                 Platforms
               </h3>
               <div className="flex flex-wrap gap-2">
-                {platforms.filter(p => p.id && p.name).map((platform) => (
+                {platforms.filter((p: any) => p.id && p.name).map((platform: any) => (
                   <Link key={platform.id} href={buildGamesUrl({ platformIds: [platform.id!] })}>
                     <Badge variant="secondary" className="text-sm hover:bg-zinc-200 cursor-pointer transition-colors">
                       {platform.abbreviation || platform.name}
@@ -173,7 +173,7 @@ export default async function GamePage({ params }: GamePageProps) {
             <div>
               <h3 className="text-sm font-semibold text-zinc-700 mb-2">Genres</h3>
               <div className="flex flex-wrap gap-2">
-                {genres.filter(g => g.id && g.name).map((genre) => (
+                {genres.filter((g: any) => g.id && g.name).map((genre: any) => (
                   <Link key={genre.id} href={buildGamesUrl({ genreIds: [genre.id!] })}>
                     <Badge variant="outline" className="text-sm hover:bg-zinc-50 cursor-pointer transition-colors">
                       {genre.name}
@@ -192,7 +192,7 @@ export default async function GamePage({ params }: GamePageProps) {
                 Developers
               </h3>
               <div className="flex flex-wrap gap-2">
-                {developers.map((dev) => (
+                {developers.map((dev: any) => (
                   <Link key={dev.company?.id || Math.random()} href={buildGamesUrl({ developerCompanyId: dev.company?.id })}>
                     <Badge variant="outline" className="text-sm hover:bg-zinc-50 cursor-pointer transition-colors">
                       {dev.company?.name}
@@ -262,7 +262,7 @@ export default async function GamePage({ params }: GamePageProps) {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {screenshots.slice(0, 6).map((screenshot, index) => (
+                  {screenshots.slice(0, 6).map((screenshot: any, index: number) => (
                     <div key={screenshot.image_id} className="aspect-video relative overflow-hidden rounded-lg">
                       <Image
                         src={getScreenshotUrl(screenshot.image_id)}
@@ -396,7 +396,7 @@ export default async function GamePage({ params }: GamePageProps) {
                 <div>
                   <h4 className="text-sm font-semibold text-zinc-700">Platforms</h4>
                   <p className="text-sm text-zinc-600">
-                    {platforms.map(p => p.abbreviation || p.name).join(', ')}
+                    {platforms.map((p: any) => p.abbreviation || p.name).join(', ')}
                   </p>
                 </div>
               )}
@@ -405,7 +405,7 @@ export default async function GamePage({ params }: GamePageProps) {
                 <div>
                   <h4 className="text-sm font-semibold text-zinc-700">Genres</h4>
                   <p className="text-sm text-zinc-600">
-                    {genres.map(g => g.name).join(', ')}
+                    {genres.map((g: any) => g.name).join(', ')}
                   </p>
                 </div>
               )}
@@ -414,7 +414,7 @@ export default async function GamePage({ params }: GamePageProps) {
                 <div>
                   <h4 className="text-sm font-semibold text-zinc-700">Developers</h4>
                   <p className="text-sm text-zinc-600">
-                    {developers.map(d => d.company?.name).filter(Boolean).join(', ')}
+                    {developers.map((d: any) => d.company?.name).filter(Boolean).join(', ')}
                   </p>
                 </div>
               )}
