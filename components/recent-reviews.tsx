@@ -3,19 +3,19 @@ import Link from 'next/link';
 interface Review {
   id: string;
   rating: number;
-  title?: string;
-  body?: string;
+  title?: string | null;
+  body?: string | null;
   createdAt: string;
   user: {
     id: string;
     username: string;
-    image?: string;
+    image?: string | null;
   };
   game: {
     id: string;
     igdbId: number;
     name: string;
-    coverId?: string;
+    coverId?: string | null;
   };
 }
 
