@@ -60,7 +60,7 @@ export default async function ReviewedPage() {
             >
               <div className="relative aspect-[3/4] overflow-hidden">
                 <Image
-                  src={getGameCoverUrl(review.game.coverId)}
+                  src={getGameCoverUrl(review.game.coverId || undefined)}
                   alt={review.game.name}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-200"

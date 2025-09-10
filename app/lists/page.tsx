@@ -125,7 +125,7 @@ export default async function ListsPage() {
                   >
                     <div className="relative w-12 h-16 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
                       <Image
-                        src={getGameCoverUrl(favorite.game.coverId)}
+                        src={getGameCoverUrl(favorite.game.coverId || undefined)}
                         alt={favorite.game.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-200"
@@ -159,7 +159,7 @@ export default async function ListsPage() {
                   >
                     <div className="relative w-12 h-16 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
                       <Image
-                        src={getGameCoverUrl(review.game.coverId)}
+                        src={getGameCoverUrl(review.game.coverId || undefined)}
                         alt={review.game.name}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-200"

@@ -60,7 +60,7 @@ export default async function FavoritesPage() {
             >
               <div className="relative aspect-[3/4] overflow-hidden">
                 <Image
-                  src={getGameCoverUrl(favorite.game.coverId)}
+                  src={getGameCoverUrl(favorite.game.coverId || undefined)}
                   alt={favorite.game.name}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-200"

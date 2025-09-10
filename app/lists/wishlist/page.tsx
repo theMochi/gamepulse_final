@@ -69,7 +69,7 @@ export default async function WishlistPage() {
             >
               <div className="relative aspect-[3/4] overflow-hidden">
                 <Image
-                  src={getGameCoverUrl(entry.game.coverId)}
+                  src={getGameCoverUrl(entry.game.coverId || undefined)}
                   alt={entry.game.name}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-200"
