@@ -13,6 +13,7 @@ interface Review {
   };
   game: {
     id: string;
+    igdbId: number;
     name: string;
     coverId?: string;
   };
@@ -64,7 +65,7 @@ export default function RecentReviews({ items }: RecentReviewsProps) {
                   </Link>
                   <span className="text-gray-500">•</span>
                   <Link
-                    href={`/game/${review.game.id}`}
+                    href={`/game/${review.game.igdbId}`}
                     className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     {review.game.name}

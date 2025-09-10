@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { notFound } from 'next/navigation';
 import FollowButton from '@/components/follow-button';
+import ProfileStats from '@/components/profile-stats';
 
 const prisma = new PrismaClient();
 
@@ -44,64 +45,87 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     take: 5
   });
 
+  // Get favorites
+  const favorites = await prisma.favorite.findMany({
+    where: { userId: user.id },
+    include: { game: true },
+    orderBy: { createdAt: 'desc' },
+    take: 20
+  });
+
+  // Get lists
+  const userLists = await prisma.list.findMany({
+    where: { userId: user.id },
+    include: {
+      entries: {
+        include: { game: true },
+        take: 20
+      }
+    }
+  });
+
+  // Organize lists by type
+  const lists = {
+    backlog: userLists.find(l => l.type === 'BACKLOG')?.entries.map(e => e.game) || [],
+    played: userLists.find(l => l.type === 'PLAYED')?.entries.map(e => e.game) || [],
+    wishlist: userLists.find(l => l.type === 'WISHLIST')?.entries.map(e => e.game) || []
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center space-x-6">
-          <div className="flex-shrink-0">
-            {user.image ? (
-              <img
-                className="h-24 w-24 rounded-full"
-                src={user.image}
-                alt={user.username}
-              />
-            ) : (
-              <div className="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center">
-                <span className="text-2xl font-bold text-gray-600">
-                  {user.username.charAt(0).toUpperCase()}
-                </span>
-              </div>
-            )}
-          </div>
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900">{user.username}</h1>
-            {user.bio && (
-              <p className="mt-2 text-gray-600">{user.bio}</p>
-            )}
-            <div className="mt-4 flex space-x-6">
-              <div className="text-sm">
-                <span className="font-medium text-gray-900">{user._count.followers}</span>
-                <span className="text-gray-500 ml-1">followers</span>
-              </div>
-              <div className="text-sm">
-                <span className="font-medium text-gray-900">{user._count.following}</span>
-                <span className="text-gray-500 ml-1">following</span>
-              </div>
-              <div className="text-sm">
-                <span className="font-medium text-gray-900">{user._count.reviews}</span>
-                <span className="text-gray-500 ml-1">reviews</span>
-              </div>
-              <div className="text-sm">
-                <span className="font-medium text-gray-900">{user._count.favorites}</span>
-                <span className="text-gray-500 ml-1">favorites</span>
-              </div>
+        <div className="space-y-4">
+          <div className="flex items-start space-x-6">
+            <div className="flex-shrink-0">
+              {user.image ? (
+                <img
+                  className="h-24 w-24 rounded-full"
+                  src={user.image}
+                  alt={user.username}
+                />
+              ) : (
+                <div className="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-gray-600">
+                    {user.username.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
+            </div>
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-gray-900">{user.username}</h1>
+              {user.bio && (
+                <p className="mt-2 text-gray-600">{user.bio}</p>
+              )}
+            </div>
+            <div className="flex-shrink-0">
+              {!isOwnProfile && session && (
+                <FollowButton
+                  targetUserId={user.id}
+                  isFollowing={!!isFollowing}
+                />
+              )}
+              {isOwnProfile && (
+                <a
+                  href="/settings"
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Edit Profile
+                </a>
+              )}
             </div>
           </div>
-          <div className="flex-shrink-0">
-            {!isOwnProfile && session && (
-              <FollowButton
-                targetUserId={user.id}
-                isFollowing={!!isFollowing}
-              />
-            )}
-            {isOwnProfile && (
-              <a
-                href="/settings"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Edit Profile
-              </a>
-            )}
+          <div className="ml-32">
+            <ProfileStats
+              favorites={favorites.map(f => f.game)}
+              lists={lists}
+              reviews={recentReviews.map(r => r.game)}
+              counts={{
+                followers: user._count.followers,
+                following: user._count.following,
+                reviews: user._count.reviews,
+                favorites: user._count.favorites
+              }}
+            />
           </div>
         </div>
       </div>

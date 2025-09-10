@@ -46,6 +46,7 @@ export default function GamesPage() {
 
     // Build search parameters with new parameter names
     const minRating = searchParams.get('minRating');
+    const minReviewCount = searchParams.get('minReviewCount');
     const platformIds = searchParams.get('platformIds');
     const genreIds = searchParams.get('genreIds');
     const developerCompanyId = searchParams.get('developerCompanyId');
@@ -58,6 +59,7 @@ export default function GamesPage() {
     params.set('offset', ((page - 1) * 48).toString());
 
     if (minRating) params.set('minRating', minRating);
+    if (minReviewCount) params.set('minReviewCount', minReviewCount);
     if (platformIds) params.set('platformIds', platformIds);
     if (genreIds) params.set('genreIds', genreIds);
     if (developerCompanyId) params.set('developerCompanyId', developerCompanyId);

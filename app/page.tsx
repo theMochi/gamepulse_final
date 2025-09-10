@@ -22,7 +22,7 @@ async function FeaturedSection() {
         href="/games?year=2025&sort=rating"
       >
         {displayGames.map((game) => (
-          <GameCard key={game.id} game={game} />
+          <GameCard key={game.id} game={game} showSummary />
         ))}
       </Section>
     );
@@ -52,7 +52,7 @@ async function TopGamesSection() {
         href="/games?sort=hot"
       >
         {displayGames.map((game) => (
-          <GameCard key={game.id} game={game} />
+          <GameCard key={game.id} game={game} showSummary />
         ))}
       </Section>
     );
@@ -81,7 +81,7 @@ async function ComingSoonSection() {
         href="/games?year=2025&comingSoon=1&sort=release_asc"
       >
         {displayGames.map((game) => (
-          <GameCard key={game.id} game={game} />
+          <GameCard key={game.id} game={game} showSummary />
         ))}
       </Section>
     );

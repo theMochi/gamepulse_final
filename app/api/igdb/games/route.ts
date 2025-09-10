@@ -6,6 +6,7 @@ import { z } from 'zod';
 const SearchParamsSchema = z.object({
   type: z.enum(['featured', 'top', 'coming-soon', 'search']).optional(),
   minRating: z.coerce.number().min(0).max(100).optional(),
+  minReviewCount: z.coerce.number().min(0).max(50000).optional(),
   genreIds: z.string().optional(), // comma-separated genre IDs
   platformIds: z.string().optional(), // comma-separated platform IDs
   developerCompanyId: z.coerce.number().optional(),
@@ -19,6 +20,7 @@ const SearchParamsSchema = z.object({
 
 const BodySchema = z.object({
   minRating: z.number().min(0).max(100).optional(),
+  minReviewCount: z.number().min(0).max(50000).optional(),
   genreIds: z.array(z.number()).optional(),
   platformIds: z.array(z.number()).optional(),
   developerCompanyId: z.number().optional(),
@@ -29,6 +31,7 @@ const BodySchema = z.object({
 
 async function buildStructuredQuery(filters: {
   minRating?: number;
+  minReviewCount?: number;
   genreIds?: number[];
   platformIds?: number[];
   developerCompanyId?: number;
@@ -42,6 +45,10 @@ async function buildStructuredQuery(filters: {
   
   if (filters.minRating) {
     conditions.push(`total_rating >= ${filters.minRating}`);
+  }
+  
+  if (filters.minReviewCount) {
+    conditions.push(`total_rating_count >= ${filters.minReviewCount}`);
   }
   
   if (filters.genreIds && filters.genreIds.length > 0) {
@@ -150,6 +157,7 @@ export async function GET(request: NextRequest) {
 
         const query = await buildStructuredQuery({
           minRating: params.minRating,
+          minReviewCount: params.minReviewCount,
           genreIds,
           platformIds,
           developerCompanyId: params.developerCompanyId,
@@ -206,6 +214,7 @@ export async function POST(request: NextRequest) {
 
     const query = await buildStructuredQuery({
       minRating: filters.minRating,
+      minReviewCount: filters.minReviewCount,
       genreIds: filters.genreIds,
       platformIds: filters.platformIds,
       developerCompanyId: filters.developerCompanyId,

@@ -35,6 +35,10 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
     const rating = searchParams.get('minRating');
     return rating ? parseInt(rating) : 0;
   });
+  const [minReviewCount, setMinReviewCount] = useState(() => {
+    const count = searchParams.get('minReviewCount');
+    return count ? parseInt(count) : 0;
+  });
   const [selectedPlatforms, setSelectedPlatforms] = useState<number[]>(() => {
     const platformIds = searchParams.get('platformIds');
     return platformIds ? platformIds.split(',').map(Number).filter(Boolean) : [];
@@ -56,6 +60,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
     const params = new URLSearchParams();
     
     if (minRating > 0) params.set('minRating', minRating.toString());
+    if (minReviewCount > 0) params.set('minReviewCount', minReviewCount.toString());
     if (selectedPlatforms.length > 0) params.set('platformIds', selectedPlatforms.join(','));
     if (selectedGenres.length > 0) params.set('genreIds', selectedGenres.join(','));
     if (developerCompanyId) params.set('developerCompanyId', developerCompanyId.toString());
@@ -68,10 +73,11 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
   useEffect(() => {
     const timeoutId = setTimeout(updateURL, 300);
     return () => clearTimeout(timeoutId);
-  }, [minRating, selectedPlatforms, selectedGenres, developerCompanyId, sort]);
+  }, [minRating, minReviewCount, selectedPlatforms, selectedGenres, developerCompanyId, sort]);
 
   const handleReset = () => {
     setMinRating(0);
+    setMinReviewCount(0);
     setSelectedPlatforms([]);
     setSelectedGenres([]);
     setDeveloperCompanyId(undefined);
@@ -95,7 +101,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
     );
   };
 
-  const hasActiveFilters = minRating > 0 || selectedPlatforms.length > 0 || selectedGenres.length > 0 || developerCompanyId || sort !== 'hot';
+  const hasActiveFilters = minRating > 0 || minReviewCount > 0 || selectedPlatforms.length > 0 || selectedGenres.length > 0 || developerCompanyId || sort !== 'hot';
 
   return (
     <Card className={cn(
@@ -157,6 +163,29 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
               <span>0</span>
               <span>50</span>
               <span>100</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Min Review Count Slider */}
+        <div className="space-y-3">
+          <label className="text-sm font-medium text-zinc-700">
+            Minimum Reviews: {minReviewCount.toLocaleString()}
+          </label>
+          <div className="px-2">
+            <input
+              type="range"
+              min="0"
+              max="10000"
+              step="100"
+              value={minReviewCount}
+              onChange={(e) => setMinReviewCount(parseInt(e.target.value))}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            />
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>0</span>
+              <span>5K</span>
+              <span>10K+</span>
             </div>
           </div>
         </div>
