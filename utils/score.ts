@@ -1,14 +1,20 @@
 import { IGDBGame } from '@/lib/igdb';
 
+// VERSION: 2.0 - Fixed TypeScript arithmetic operation error
+
 export function calculateCombinedScore(game: IGDBGame): number {
-  const rating: number = game.total_rating || game.aggregated_rating || 0;
-  const count: number = game.total_rating_count || game.aggregated_rating_count || 0;
+  // Get rating with explicit number type to satisfy TypeScript
+  const ratingValue = game.total_rating ?? game.aggregated_rating ?? 0;
+  const rating: number = Number(ratingValue);
+  
+  // Get count with explicit number type to satisfy TypeScript  
+  const countValue = game.total_rating_count ?? game.aggregated_rating_count ?? 0;
+  const count: number = Number(countValue);
   
   if (rating === 0 || count === 0) return 0;
   
   // Combined score = rating * ln(1 + count)
   // This gives weight to both rating quality and review volume
-  // Force new deployment to ensure Vercel picks up latest changes
   return rating * Math.log(1 + count);
 }
 
