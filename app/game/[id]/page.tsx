@@ -81,6 +81,7 @@ export default async function GamePage({ params }: GamePageProps) {
       inPlayed:  (lists.find(l => l.type === 'PLAYED')?.entries?.length ?? 0) > 0,
       inWishlist:(lists.find(l => l.type === 'WISHLIST')?.entries?.length ?? 0) > 0,
     };
+  }
 
   // Get recent reviews for this game
   const recentReviews = await prisma.review.findMany({
