@@ -8,6 +8,7 @@ export function calculateCombinedScore(game: IGDBGame): number {
   
   // Combined score = rating * ln(1 + count)
   // This gives weight to both rating quality and review volume
+  // Force new deployment to ensure Vercel picks up latest changes
   return rating * Math.log(1 + count);
 }
 
