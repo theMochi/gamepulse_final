@@ -81,7 +81,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
             className="flex-shrink-0"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center overflow-hidden">
               {review.user.image ? (
                 <img 
                   src={review.user.image} 
@@ -89,7 +89,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <User className="w-6 h-6 text-gray-400" />
+                <User className="w-6 h-6 text-muted-foreground" />
               )}
             </div>
           </Link>
@@ -106,16 +106,16 @@ export function ReviewCard({ review }: ReviewCardProps) {
                 >
                   {review.user.name || review.user.username}
                 </Link>
-                <span className="text-gray-500 ml-2">reviewed</span>
+                <span className="text-muted-foreground ml-2">reviewed</span>
                 <span className="font-semibold ml-2">
                   {review.game.name}
                 </span>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <div className="text-lg font-bold text-blue-600">
+                <div className="text-lg font-bold text-primary">
                   {scoreToDisplay(review.rating)}
                 </div>
-                <span className="text-gray-400 text-sm">
+                <span className="text-muted-foreground text-sm">
                   {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
                 </span>
               </div>
@@ -138,13 +138,13 @@ export function ReviewCard({ review }: ReviewCardProps) {
                   <h3 className="font-semibold mb-1">{review.title}</h3>
                 )}
                 {review.body && (
-                  <p className="text-gray-700 line-clamp-3 mb-3">
+                  <p className="text-foreground line-clamp-3 mb-3">
                     {review.body}
                   </p>
                 )}
 
                 {/* Social Interactions */}
-                <div className="flex items-center gap-4 text-gray-500">
+                <div className="flex items-center gap-4 text-muted-foreground">
                   <button 
                     onClick={handleLike}
                     disabled={isLiking}
@@ -161,7 +161,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
                   </button>
                   <Link 
                     href={`/game/${review.game.igdbId}#review-${review.id}`}
-                    className="flex items-center gap-1 hover:text-blue-500 transition-colors"
+                    className="flex items-center gap-1 hover:text-primary transition-colors"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <MessageCircle className="w-4 h-4" />

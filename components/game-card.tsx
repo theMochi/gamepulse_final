@@ -28,9 +28,9 @@ export function GameCard({ game, className, showSummary = false }: GameCardProps
 
   return (
     <Link href={`/game/${game.id}`} className="group">
-      <article className="group flex flex-col h-full rounded-2xl border border-neutral-200/60 bg-gradient-to-br from-white to-neutral-50/30 overflow-hidden hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200/40">
+      <article className="group flex flex-col h-full rounded-2xl border border-border bg-card overflow-hidden hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40">
         {/* Cover with square aspect ratio */}
-        <div className="relative w-full overflow-hidden bg-gradient-to-br from-neutral-100 to-neutral-200">
+        <div className="relative w-full overflow-hidden bg-gradient-to-br from-muted to-muted/50">
           <Image
             src={coverUrl}
             alt={`${game.name} cover`}
@@ -45,17 +45,17 @@ export function GameCard({ game, className, showSummary = false }: GameCardProps
         {/* Body with fixed height */}
         <div className="flex flex-col gap-3 p-4 flex-1 min-h-[200px]">
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-zinc-900 line-clamp-2 min-h-[2.5rem] leading-tight mb-2">
+            <h3 className="text-sm font-semibold text-foreground line-clamp-2 min-h-[2.5rem] leading-tight mb-2">
               {game.name}
             </h3>
-            <div className="text-xs text-neutral-500 mb-3">{fmtDate(game.first_release_date)}</div>
+            <div className="text-xs text-muted-foreground mb-3">{fmtDate(game.first_release_date)}</div>
 
             {/* Ratings row */}
             {rating && (
               <div className="flex items-center gap-2 text-sm mb-3">
                 <Stars rating={stars} size="sm" />
-                <span className="text-neutral-700 font-medium">{Math.round(rating)}</span>
-                <span className="text-neutral-500">({compact(ratingCount)})</span>
+                <span className="text-foreground font-medium">{Math.round(rating)}</span>
+                <span className="text-muted-foreground">({compact(ratingCount)})</span>
               </div>
             )}
           </div>
@@ -66,7 +66,7 @@ export function GameCard({ game, className, showSummary = false }: GameCardProps
               <div className="flex flex-wrap gap-1 min-h-[1.5rem]" onClick={(e) => e.stopPropagation()}>
                 {platforms.filter(p => p.id && p.name).slice(0,3).map((p) => (
                   <Link key={p.id} href={buildGamesUrl({platformIds:[p.id!]})} onClick={(e) => e.stopPropagation()}>
-                    <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 hover:bg-blue-100 cursor-pointer transition-colors border border-blue-200/40">
+                    <Badge className="text-xs px-2 py-0.5 bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer transition-colors border border-primary/20">
                       {p.abbreviation ?? p.name}
                     </Badge>
                   </Link>
@@ -78,7 +78,7 @@ export function GameCard({ game, className, showSummary = false }: GameCardProps
               <div className="flex flex-wrap gap-1 min-h-[1.5rem]" onClick={(e) => e.stopPropagation()}>
                 {genres.filter(g => g.id && g.name).slice(0,2).map((g) => (
                   <Link key={g.id} href={buildGamesUrl({genreIds:[g.id!]})} onClick={(e) => e.stopPropagation()}>
-                    <Badge variant="outline" className="text-xs px-2 py-0.5 text-purple-700 border-purple-200 hover:bg-purple-50 cursor-pointer transition-colors">
+                    <Badge className="text-xs px-2 py-0.5 text-purple-400 border-purple-500/30 hover:bg-purple-500/10 cursor-pointer transition-colors border">
                       {g.name}
                     </Badge>
                   </Link>
@@ -89,7 +89,7 @@ export function GameCard({ game, className, showSummary = false }: GameCardProps
 
           {/* Summary - consistent space; clamp */}
           {showSummary && game.summary && (
-            <p className="text-xs text-neutral-600 line-clamp-2 leading-relaxed border-t border-neutral-100 pt-3">
+            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed border-t border-border pt-3">
               {game.summary}
             </p>
           )}
