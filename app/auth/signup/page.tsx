@@ -54,26 +54,6 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="flex items-center justify-between p-6">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <span className="text-xl font-bold text-foreground">GamePulse</span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Link href="/auth/signin" className="text-primary hover:text-primary/80 font-medium">
-            Log In
-          </Link>
-          <Link href="/auth/signup" className="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors">
-            Sign Up
-          </Link>
-        </div>
-      </header>
-
       {/* Main Content */}
       <div className="flex items-center justify-center px-4 py-12">
         <div className="max-w-md w-full space-y-8">

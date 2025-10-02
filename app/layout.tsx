@@ -40,13 +40,13 @@ export default function RootLayout({
                 <nav className="flex items-center space-x-6">
                   <Link 
                     href="/" 
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
+                    className="text-foreground hover:text-primary transition-colors text-sm font-medium"
                   >
                     Home
                   </Link>
                   <Link 
                     href="/games" 
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
+                    className="text-foreground hover:text-primary transition-colors text-sm font-medium"
                   >
                     Browse Games
                   </Link>
