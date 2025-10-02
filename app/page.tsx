@@ -32,7 +32,7 @@ async function FeaturedSection() {
     console.error('Error fetching featured games:', error);
     return (
       <Section eyebrow="Editor's Choice" title="Featured Games" description="The highest-rated games released in 2025">
-        <div className="col-span-full text-center py-8 text-zinc-500">
+        <div className="col-span-full text-center py-8 text-muted-foreground">
           Unable to load featured games. Please try again later.
         </div>
       </Section>
@@ -62,7 +62,7 @@ async function TopGamesSection() {
     console.error('Error fetching top games:', error);
     return (
       <Section eyebrow="Most Popular" title="Top Games" description="Ranked by combined rating and review volume">
-        <div className="col-span-full text-center py-8 text-zinc-500">
+        <div className="col-span-full text-center py-8 text-muted-foreground">
           Unable to load top games. Please try again later.
         </div>
       </Section>
@@ -91,7 +91,7 @@ async function ComingSoonSection() {
     console.error('Error fetching coming soon games:', error);
     return (
       <Section eyebrow="Upcoming" title="Coming Soon" description="Highly anticipated games releasing in 2025">
-        <div className="col-span-full text-center py-8 text-zinc-500">
+        <div className="col-span-full text-center py-8 text-muted-foreground">
           Unable to load upcoming games. Please try again later.
         </div>
       </Section>
@@ -174,7 +174,7 @@ export default async function HomePage() {
         </Suspense>
 
         {/* Section Separator */}
-        <div className="h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-12" />
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-12" />
 
         {/* Social Activity Feed - Mixed with Games */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -249,10 +249,10 @@ export default async function HomePage() {
         </div>
 
         {/* Section Separator */}
-        <div className="h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-12" />
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-12" />
 
         {/* Coming Soon - with alternating background */}
-        <div className="bg-neutral-50 rounded-2xl -mx-4 px-4 py-8">
+        <div className="bg-card rounded-2xl -mx-4 px-4 py-8">
           <Suspense fallback={
             <LoadingSection 
               eyebrow="Releasing Soon" 
