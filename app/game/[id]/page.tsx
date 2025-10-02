@@ -327,7 +327,7 @@ export default async function GamePage({ params }: GamePageProps) {
             <CardContent className="space-y-4">
               {recentReviews.length > 0 ? (
                 recentReviews.map((review) => (
-                  <div key={review.id} className="border-b border-gray-200 pb-4 last:border-b-0">
+                  <div key={review.id} className="border-b border-border pb-4 last:border-b-0">
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0">
                         {review.user.image ? (
@@ -337,8 +337,8 @@ export default async function GamePage({ params }: GamePageProps) {
                             alt={review.user.username}
                           />
                         ) : (
-                          <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-                            <span className="text-sm font-bold text-gray-600">
+                          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                            <span className="text-sm font-bold text-muted-foreground">
                               {review.user.username.charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -348,23 +348,23 @@ export default async function GamePage({ params }: GamePageProps) {
                         <div className="flex items-center space-x-2">
                           <Link
                             href={`/profile/${review.user.username}`}
-                            className="text-sm font-medium text-gray-900 hover:text-indigo-600"
+                            className="text-sm font-medium text-foreground hover:text-primary"
                           >
                             {review.user.username}
                           </Link>
                           <div className="flex items-center">
                             <span className="text-yellow-500 text-sm">★</span>
-                            <span className="ml-1 text-sm text-gray-600">{review.rating}/10</span>
+                            <span className="ml-1 text-sm text-muted-foreground">{review.rating}/10</span>
                           </div>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-muted-foreground">
                             {new Date(review.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                         {review.title && (
-                          <h4 className="text-sm font-medium text-gray-900 mt-1">{review.title}</h4>
+                          <h4 className="text-sm font-medium text-foreground mt-1">{review.title}</h4>
                         )}
                         {review.body && (
-                          <p className="text-sm text-gray-600 mt-1 line-clamp-3">{review.body}</p>
+                          <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{review.body}</p>
                         )}
                       </div>
                     </div>
@@ -372,8 +372,8 @@ export default async function GamePage({ params }: GamePageProps) {
                 ))
               ) : (
                 <div className="text-center py-6">
-                  <p className="text-gray-500 text-sm">No reviews yet</p>
-                  <p className="text-gray-400 text-xs mt-1">Be the first to review this game!</p>
+                  <p className="text-muted-foreground text-sm">No reviews yet</p>
+                  <p className="text-muted-foreground text-xs mt-1">Be the first to review this game!</p>
                 </div>
               )}
             </CardContent>
