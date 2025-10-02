@@ -39,9 +39,9 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
     const count = searchParams.get('minReviewCount');
     return count ? parseInt(count) : 0;
   });
-  const [selectedPlatforms, setSelectedPlatforms] = useState<number[]>(() => {
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(() => {
     const platformIds = searchParams.get('platformIds');
-    return platformIds ? platformIds.split(',').map(Number).filter(Boolean) : [];
+    return platformIds ? platformIds.split(',').filter(Boolean) : [];
   });
   const [selectedGenres, setSelectedGenres] = useState<number[]>(() => {
     const genreIds = searchParams.get('genreIds');
@@ -56,12 +56,28 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
   const [platformsOpen, setPlatformsOpen] = useState(false);
   const [genresOpen, setGenresOpen] = useState(false);
 
+  // Map simplified platform names to IGDB platform IDs
+  const platformMapping: Record<string, number[]> = {
+    'playstation': [48, 167, 169], // PS4, PS5, PlayStation
+    'xbox': [49, 165, 169], // Xbox One, Xbox Series X/S, Xbox
+    'nintendo': [130, 131], // Nintendo Switch, Nintendo 3DS
+    'pc': [6, 14, 3] // PC (Microsoft Windows), Mac, Linux
+  };
+
   const updateURL = () => {
     const params = new URLSearchParams();
     
     if (minRating > 0) params.set('minRating', minRating.toString());
     if (minReviewCount > 0) params.set('minReviewCount', minReviewCount.toString());
-    if (selectedPlatforms.length > 0) params.set('platformIds', selectedPlatforms.join(','));
+    
+    // Convert selected platforms to IGDB platform IDs
+    if (selectedPlatforms.length > 0) {
+      const platformIds = selectedPlatforms.flatMap(platform => platformMapping[platform] || []);
+      if (platformIds.length > 0) {
+        params.set('platformIds', platformIds.join(','));
+      }
+    }
+    
     if (selectedGenres.length > 0) params.set('genreIds', selectedGenres.join(','));
     if (developerCompanyId) params.set('developerCompanyId', developerCompanyId.toString());
     if (sort !== 'hot') params.set('sort', sort);
@@ -85,12 +101,13 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
     router.push('/games');
   };
 
-  const togglePlatform = (platformId: number) => {
+  const togglePlatform = (platformId: string) => {
     setSelectedPlatforms(prev => 
       prev.includes(platformId)
         ? prev.filter(id => id !== platformId)
         : [...prev, platformId]
     );
+    setPlatformsOpen(false); // Close dropdown after selection
   };
 
   const toggleGenre = (genreId: number) => {

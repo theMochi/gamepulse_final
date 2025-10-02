@@ -29,14 +29,13 @@ export function GameCard({ game, className, showSummary = false }: GameCardProps
   return (
     <Link href={`/game/${game.id}`} className="group">
       <article className="group flex flex-col h-full rounded-2xl border border-border bg-card overflow-hidden hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40">
-        {/* Cover with square aspect ratio */}
-        <div className="relative w-full overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+        {/* Cover with consistent height but full image visibility */}
+        <div className="relative w-full h-64 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
           <Image
             src={coverUrl}
             alt={`${game.name} cover`}
-            width={280}
-            height={280}
-            className="h-auto w-full object-cover aspect-square transition-transform duration-300 group-hover:scale-110"
+            fill
+            className="object-contain transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
