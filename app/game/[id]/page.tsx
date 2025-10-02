@@ -95,6 +95,11 @@ export default async function GamePage({ params }: GamePageProps) {
     take: 10
   });
 
+  // Calculate average rating from reviews
+  const averageRating = recentReviews.length > 0 
+    ? recentReviews.reduce((sum, review) => sum + review.rating, 0) / recentReviews.length 
+    : null;
+
   const coverUrl = getGameCoverLargeUrl(game.cover?.image_id);
   const rating = game.total_rating;
   const ratingCount = game.total_rating_count;
@@ -238,74 +243,15 @@ export default async function GamePage({ params }: GamePageProps) {
         </div>
       </div>
 
-      {/* Content Tabs */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Overview */}
-          {game.summary && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Overview</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-foreground leading-relaxed">{game.summary}</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Screenshots */}
-          {screenshots.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Screenshots</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {screenshots.slice(0, 6).map((screenshot: any, index: number) => (
-                    <div key={screenshot.image_id} className="aspect-video relative overflow-hidden rounded-lg">
-                      <Image
-                        src={getScreenshotUrl(screenshot.image_id)}
-                        alt={`${game.name} screenshot ${index + 1}`}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-200"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Trailer */}
-          {trailer && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Trailer</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="aspect-video relative overflow-hidden rounded-lg">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${trailer.video_id}`}
-                    title={`${game.name} trailer`}
-                    className="absolute inset-0 w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-        </div>
-
-        {/* Sidebar */}
+      {/* Main Content - Reviews as Center of Attention */}
+      <div className="space-y-8">
+        {/* Reviews Section - Prominent and Central */}
         <div className="space-y-6">
-          {/* Review Form - Prominent at top */}
+          {/* Review Form */}
           <Card>
             <CardHeader>
-              <CardTitle>Rate & Review</CardTitle>
+              <CardTitle className="text-2xl">Rate & Review</CardTitle>
+              <p className="text-muted-foreground">Share your thoughts about this game</p>
             </CardHeader>
             <CardContent>
               <ReviewForm 
@@ -319,67 +265,149 @@ export default async function GamePage({ params }: GamePageProps) {
             </CardContent>
           </Card>
 
-          {/* User Reviews */}
+          {/* Community Reviews - Enhanced Layout */}
           <Card>
             <CardHeader>
-              <CardTitle>Community Reviews</CardTitle>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-2xl">Community Reviews</CardTitle>
+                  <p className="text-muted-foreground mt-1">
+                    {recentReviews.length} {recentReviews.length === 1 ? 'review' : 'reviews'} from the community
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-foreground">
+                    {averageRating ? averageRating.toFixed(1) : 'N/A'}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Average Rating</div>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               {recentReviews.length > 0 ? (
-                recentReviews.map((review) => (
-                  <div key={review.id} className="border-b border-border pb-4 last:border-b-0">
-                    <div className="flex items-start space-x-3">
-                      <div className="flex-shrink-0">
-                        {review.user.image ? (
-                          <img
-                            className="h-8 w-8 rounded-full"
-                            src={review.user.image}
-                            alt={review.user.username}
-                          />
-                        ) : (
-                          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                            <span className="text-sm font-bold text-muted-foreground">
-                              {review.user.username.charAt(0).toUpperCase()}
+                <div className="space-y-6">
+                  {recentReviews.map((review) => (
+                    <div key={review.id} className="border border-border rounded-lg p-6 hover:bg-card/50 transition-colors">
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                          {review.user.image ? (
+                            <img
+                              className="h-12 w-12 rounded-full"
+                              src={review.user.image}
+                              alt={review.user.username}
+                            />
+                          ) : (
+                            <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                              <span className="text-lg font-bold text-muted-foreground">
+                                {review.user.username.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-3">
+                              <Link
+                                href={`/profile/${review.user.username}`}
+                                className="text-lg font-semibold text-foreground hover:text-primary transition-colors"
+                              >
+                                {review.user.username}
+                              </Link>
+                              <div className="flex items-center space-x-1">
+                                <span className="text-yellow-500 text-lg">★</span>
+                                <span className="text-lg font-semibold text-foreground">{review.rating}/10</span>
+                              </div>
+                            </div>
+                            <span className="text-sm text-muted-foreground">
+                              {new Date(review.createdAt).toLocaleDateString()}
                             </span>
                           </div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-2">
-                          <Link
-                            href={`/profile/${review.user.username}`}
-                            className="text-sm font-medium text-foreground hover:text-primary"
-                          >
-                            {review.user.username}
-                          </Link>
-                          <div className="flex items-center">
-                            <span className="text-yellow-500 text-sm">★</span>
-                            <span className="ml-1 text-sm text-muted-foreground">{review.rating}/10</span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">
-                            {new Date(review.createdAt).toLocaleDateString()}
-                          </span>
+                          {review.title && (
+                            <h4 className="text-lg font-semibold text-foreground mb-2">{review.title}</h4>
+                          )}
+                          {review.body && (
+                            <p className="text-foreground leading-relaxed">{review.body}</p>
+                          )}
                         </div>
-                        {review.title && (
-                          <h4 className="text-sm font-medium text-foreground mt-1">{review.title}</h4>
-                        )}
-                        {review.body && (
-                          <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{review.body}</p>
-                        )}
                       </div>
                     </div>
-                  </div>
-                ))
+                  ))}
+                </div>
               ) : (
-                <div className="text-center py-6">
-                  <p className="text-muted-foreground text-sm">No reviews yet</p>
-                  <p className="text-muted-foreground text-xs mt-1">Be the first to review this game!</p>
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">📝</div>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">No reviews yet</h3>
+                  <p className="text-muted-foreground mb-4">Be the first to review this game and share your thoughts!</p>
                 </div>
               )}
             </CardContent>
           </Card>
+        </div>
 
-          {/* Game Details */}
+        {/* Additional Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Overview */}
+            {game.summary && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Overview</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-foreground leading-relaxed">{game.summary}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Screenshots */}
+            {screenshots.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Screenshots</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {screenshots.slice(0, 6).map((screenshot: any, index: number) => (
+                      <div key={screenshot.image_id} className="aspect-video relative overflow-hidden rounded-lg">
+                        <Image
+                          src={getScreenshotUrl(screenshot.image_id)}
+                          alt={`${game.name} screenshot ${index + 1}`}
+                          fill
+                          className="object-cover hover:scale-105 transition-transform duration-200"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Trailer */}
+            {trailer && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Trailer</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="aspect-video relative overflow-hidden rounded-lg">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${trailer.video_id}`}
+                      title={`${game.name} trailer`}
+                      className="absolute inset-0 w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Game Details */}
           <Card>
             <CardHeader>
               <CardTitle>Game Details</CardTitle>
@@ -437,6 +465,7 @@ export default async function GamePage({ params }: GamePageProps) {
               )}
             </CardContent>
           </Card>
+          </div>
         </div>
       </div>
     </div>
