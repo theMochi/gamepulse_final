@@ -127,25 +127,25 @@ export default async function HomePage() {
         {/* Background gradients */}
         <div
           className="pointer-events-none absolute inset-x-0 -top-24 h-96 opacity-60 blur-3xl"
-          style={{ background: 'radial-gradient(1400px 400px at 50% 0%, rgba(59,130,246,0.15), rgba(147,51,234,0.08), transparent)' }}
+          style={{ background: 'radial-gradient(1400px 400px at 50% 0%, rgba(79,70,229,0.15), rgba(147,51,234,0.08), transparent)' }}
         />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICA8L2RlZnM+CiAgPGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgIDxnIGZpbGw9IiM5Q0EzQUYiIGZpbGwtb3BhY2l0eT0iMC4xIj4KICAgICAgPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMS41Ii8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4=')] opacity-30"></div>
         
         <header className="relative text-center py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 text-sm font-medium mb-6 border border-blue-200/50">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 border border-primary/20">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
               Social Gaming Community
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-zinc-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-4">
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4">
               Discover Amazing Games
             </h1>
-            <p className="text-lg text-zinc-600 max-w-2xl mx-auto mb-6">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
               Track, rate, and discover games with the community. See what others are playing and share your own experiences.
             </p>
-            <div className="flex items-center justify-center gap-6 text-sm text-neutral-500">
+            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
                 <span>10k+ games</span>
               </div>
               <div className="flex items-center gap-2">
@@ -196,34 +196,34 @@ export default async function HomePage() {
             <TrendingReviews reviews={trendingReviews} />
 
             {/* Quick Stats */}
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-100">
-              <h3 className="font-bold text-lg mb-4">Community Stats</h3>
+            <div className="bg-card rounded-lg p-6 border border-border">
+              <h3 className="font-bold text-lg mb-4 text-foreground">Community Stats</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Active Users</span>
-                  <span className="font-bold text-blue-600">{featuredUsers.length}+</span>
+                  <span className="text-muted-foreground">Active Users</span>
+                  <span className="font-bold text-primary">{featuredUsers.length}+</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Recent Reviews</span>
-                  <span className="font-bold text-purple-600">{feed.length}</span>
+                  <span className="text-muted-foreground">Recent Reviews</span>
+                  <span className="font-bold text-purple-500">{feed.length}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Trending</span>
-                  <span className="font-bold text-orange-600">{trendingReviews.length}</span>
+                  <span className="text-muted-foreground">Trending</span>
+                  <span className="font-bold text-orange-500">{trendingReviews.length}</span>
                 </div>
               </div>
             </div>
 
             {/* Call to Action */}
             {!userId && (
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+              <div className="bg-primary rounded-lg p-6 text-primary-foreground">
                 <h3 className="font-bold text-xl mb-2">Join GamePulse</h3>
-                <p className="mb-4 text-blue-100">
+                <p className="mb-4 text-primary-foreground/80">
                   Sign up to share reviews, follow friends, and discover games.
                 </p>
                 <a 
                   href="/auth/signup" 
-                  className="block text-center bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-50 transition-colors"
+                  className="block text-center bg-background text-foreground font-semibold py-2 px-4 rounded-lg hover:bg-background/90 transition-colors"
                 >
                   Get Started
                 </a>
@@ -233,10 +233,10 @@ export default async function HomePage() {
         </div>
 
         {/* Section Separator */}
-        <div className="h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-12" />
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-12" />
 
         {/* Featured Games - with alternating background */}
-        <div className="bg-neutral-50 rounded-2xl -mx-4 px-4 py-8">
+        <div className="bg-card rounded-2xl -mx-4 px-4 py-8">
           <Suspense fallback={
             <LoadingSection 
               eyebrow="Best of 2025" 

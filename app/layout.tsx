@@ -23,14 +23,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(inter.className)}>
         <AuthSessionProvider>
-        <header className="border-b border-blue-200/40 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <header className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-sm">GP</span>
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
                 </div>
-                <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">GamePulse</span>
+                <span className="font-bold text-xl text-foreground">GamePulse</span>
               </Link>
               
               <div className="flex items-center space-x-6">
@@ -38,13 +40,13 @@ export default function RootLayout({
                 <nav className="flex items-center space-x-6">
                   <Link 
                     href="/" 
-                    className="text-zinc-600 hover:text-blue-600 transition-colors text-sm font-medium"
+                    className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
                   >
                     Home
                   </Link>
                   <Link 
                     href="/games" 
-                    className="text-zinc-600 hover:text-blue-600 transition-colors text-sm font-medium"
+                    className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
                   >
                     Browse Games
                   </Link>
@@ -59,20 +61,20 @@ export default function RootLayout({
           {children}
         </main>
 
-        <footer className="mt-24 border-t border-blue-200/40 bg-gradient-to-r from-white via-blue-50/30 to-purple-50/20">
-          <div className="mx-auto max-w-7xl px-4 py-8 flex flex-wrap items-center justify-between gap-4 text-sm text-neutral-600">
+        <footer className="mt-24 border-t border-border bg-background">
+          <div className="mx-auto max-w-7xl px-4 py-8 flex flex-wrap items-center justify-between gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-white grid place-items-center text-xs font-bold shadow-md">GP</div>
+              <div className="h-6 w-6 rounded-lg bg-primary text-primary-foreground grid place-items-center text-xs font-bold">GP</div>
               <span>© {new Date().getFullYear()} GamePulse</span>
             </div>
             <nav className="flex items-center gap-4">
-              <a href="/about" className="hover:text-blue-600 transition-colors">About</a>
-              <a href="/privacy" className="hover:text-blue-600 transition-colors">Privacy</a>
-              <a href="/contact" className="hover:text-blue-600 transition-colors">Contact</a>
+              <a href="/about" className="hover:text-foreground transition-colors">About</a>
+              <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
+              <a href="/contact" className="hover:text-foreground transition-colors">Contact</a>
             </nav>
             <div className="flex items-center gap-3 opacity-70 text-xs">
-              <span className="hover:text-blue-600 cursor-pointer transition-colors">Twitter</span>
-              <span className="hover:text-purple-600 cursor-pointer transition-colors">GitHub</span>
+              <span className="hover:text-primary cursor-pointer transition-colors">Twitter</span>
+              <span className="hover:text-primary cursor-pointer transition-colors">GitHub</span>
             </div>
           </div>
         </footer>
