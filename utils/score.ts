@@ -49,8 +49,8 @@ export function formatRatingCount(count?: number): string {
   return count.toString();
 }
 
-// Convert 0-100 rating to percentage display
+// Convert 0-10 rating to display with star emoji
 export function scoreToDisplay(rating: number): string {
   if (!rating) return 'N/A';
-  return `${Math.round(rating)}%`;
+  return `${Math.round(rating)} ⭐`;
 }
