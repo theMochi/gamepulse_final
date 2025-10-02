@@ -45,3 +45,11 @@ export function getThumbnailUrl(imageId?: string): string {
   
   return getIGDBImageUrl(imageId, 'thumb');
 }
+
+// Alias for getIGDBImageUrl to match the import in components
+export function getImageUrl(
+  imageId: string, 
+  size: 'cover_small' | 'cover_big' | 'cover_big_2x' | 'screenshot_med' | 'screenshot_big' | 'screenshot_huge' | 'thumb' = 'cover_big'
+): string {
+  return getIGDBImageUrl(imageId, size);
+}

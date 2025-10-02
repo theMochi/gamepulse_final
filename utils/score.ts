@@ -48,3 +48,9 @@ export function formatRatingCount(count?: number): string {
   
   return count.toString();
 }
+
+// Convert 0-100 rating to percentage display
+export function scoreToDisplay(rating: number): string {
+  if (!rating) return 'N/A';
+  return `${Math.round(rating)}%`;
+}

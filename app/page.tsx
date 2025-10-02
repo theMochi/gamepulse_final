@@ -6,8 +6,10 @@ import { Section } from '@/components/section';
 import { Suspense } from 'react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { recentReviewsForFeed } from '@/lib/feed';
-import RecentReviews from '@/components/recent-reviews';
+import { recentReviewsForFeed, getTrendingReviews, getFeaturedUsers } from '@/lib/feed';
+import { SocialFeed } from '@/components/social-feed';
+import { TrendingReviews } from '@/components/trending-reviews';
+import { FeaturedUsers } from '@/components/featured-users';
 
 async function FeaturedSection() {
   try {
@@ -109,11 +111,18 @@ function LoadingSection({ eyebrow, title, description }: { eyebrow?: string; tit
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
-  const feed = await recentReviewsForFeed((session as any)?.userId);
+  const userId = (session as any)?.userId;
+
+  // Fetch all data in parallel
+  const [feed, trendingReviews, featuredUsers] = await Promise.all([
+    recentReviewsForFeed(userId),
+    getTrendingReviews(),
+    getFeaturedUsers(),
+  ]);
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Enhanced Gradient */}
+      {/* Hero Section - Enhanced with Social Focus */}
       <div className="relative isolate overflow-hidden">
         {/* Background gradients */}
         <div
@@ -126,13 +135,13 @@ export default async function HomePage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 text-sm font-medium mb-6 border border-blue-200/50">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              Live Game Data
+              Social Gaming Community
             </div>
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-zinc-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-4">
               Discover Amazing Games
             </h1>
             <p className="text-lg text-zinc-600 max-w-2xl mx-auto mb-6">
-              Ranked by players. Powered by live data from the world's largest game database.
+              Track, rate, and discover games with the community. See what others are playing and share your own experiences.
             </p>
             <div className="flex items-center justify-center gap-6 text-sm text-neutral-500">
               <div className="flex items-center gap-2">
@@ -141,11 +150,11 @@ export default async function HomePage() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                <span>60+ platforms</span>
+                <span>Community Reviews</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span>Updated hourly</span>
+                <span>Live Updates</span>
               </div>
             </div>
           </div>
@@ -163,6 +172,65 @@ export default async function HomePage() {
         }>
           <TopGamesSection />
         </Suspense>
+
+        {/* Section Separator */}
+        <div className="h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-12" />
+
+        {/* Social Activity Feed - Mixed with Games */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Feed - Takes up 2 columns on large screens */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Social Activity Feed */}
+            <SocialFeed 
+              reviews={feed} 
+              title={userId ? "Your Feed" : "Recent Activity"}
+            />
+          </div>
+
+          {/* Sidebar - 1 column on large screens */}
+          <div className="space-y-8">
+            {/* Featured Users */}
+            <FeaturedUsers users={featuredUsers} />
+
+            {/* Trending Reviews Section */}
+            <TrendingReviews reviews={trendingReviews} />
+
+            {/* Quick Stats */}
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-100">
+              <h3 className="font-bold text-lg mb-4">Community Stats</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Active Users</span>
+                  <span className="font-bold text-blue-600">{featuredUsers.length}+</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Recent Reviews</span>
+                  <span className="font-bold text-purple-600">{feed.length}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Trending</span>
+                  <span className="font-bold text-orange-600">{trendingReviews.length}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            {!userId && (
+              <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+                <h3 className="font-bold text-xl mb-2">Join GamePulse</h3>
+                <p className="mb-4 text-blue-100">
+                  Sign up to share reviews, follow friends, and discover games.
+                </p>
+                <a 
+                  href="/auth/signup" 
+                  className="block text-center bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg hover:bg-blue-50 transition-colors"
+                >
+                  Get Started
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Section Separator */}
         <div className="h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-12" />
@@ -195,12 +263,6 @@ export default async function HomePage() {
             <ComingSoonSection />
           </Suspense>
         </div>
-
-        {/* Section Separator */}
-        <div className="h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent my-12" />
-
-        {/* Recent Reviews Feed */}
-        <RecentReviews items={feed} />
       </div>
     </div>
   );

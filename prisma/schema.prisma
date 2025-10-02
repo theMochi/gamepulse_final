@@ -1,13 +1,13 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-// Updated to use POSTGRES_PRISMA_URL for Vercel deployment
+// Updated to use SQLite for development
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -29,6 +29,8 @@ model User {
   favorites     Favorite[]
   reviews       Review[]
   lists         List[]
+  likes         ReviewLike[]
+  comments      Comment[]
 
   // next-auth
   accounts      Account[]
@@ -85,10 +87,37 @@ model Review {
   rating    Int    // 0..100 (same as total_rating scale)
   title     String?
   body      String?
+  
+  // Social features
+  likes     ReviewLike[]
+  comments  Comment[]
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, gameId])
+}
+
+model ReviewLike {
+  id        String @id @default(cuid())
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String
+  review    Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId  String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, reviewId])
+}
+
+model Comment {
+  id        String @id @default(cuid())
+  user      User   @relation(fields: [userId], references: [id])
+  userId    String
+  review    Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId  String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ListType {
