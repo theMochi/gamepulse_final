@@ -160,17 +160,17 @@ function GamesPageContent() {
         {/* Main Content */}
         <main className="flex-1 space-y-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-zinc-900">
+            <h1 className="text-3xl font-bold text-foreground">
               {getPageTitle()}
             </h1>
-            <p className="text-sm text-zinc-600">
+            <p className="text-sm text-muted-foreground">
               {games.length} games found
             </p>
           </div>
 
           {error ? (
             <div className="text-center py-12">
-              <p className="text-red-600 mb-4">{error}</p>
+              <p className="text-destructive mb-4">{error}</p>
               <Button onClick={() => fetchGames(true)}>Try Again</Button>
             </div>
           ) : (
@@ -198,7 +198,7 @@ function GamesPageContent() {
 
               {/* No more results */}
               {!loading && !hasMore && games.length > 0 && (
-                <div className="text-center py-8 text-zinc-500">
+                <div className="text-center py-8 text-muted-foreground">
                   No more games to load.
                 </div>
               )}
@@ -207,16 +207,16 @@ function GamesPageContent() {
               {!loading && games.length === 0 && (
                 <div className="col-span-full text-center py-16">
                   <div className="max-w-md mx-auto">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-zinc-100 rounded-full flex items-center justify-center">
-                      <Search className="h-8 w-8 text-zinc-400" />
+                    <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
+                      <Search className="h-8 w-8 text-muted-foreground" />
                     </div>
-                    <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
                       No games found
                     </h3>
-                    <p className="text-zinc-500 mb-4">
+                    <p className="text-muted-foreground mb-4">
                       No games found matching your criteria.
                     </p>
-                    <p className="text-sm text-zinc-400">
+                    <p className="text-sm text-muted-foreground">
                       Try adjusting your filters or search terms.
                     </p>
                   </div>

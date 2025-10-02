@@ -128,9 +128,9 @@ export default async function GamePage({ params }: GamePageProps) {
         {/* Game Info */}
         <div className="lg:col-span-2 space-y-6">
           <div>
-            <h1 className="text-4xl font-bold text-zinc-900 mb-2">{game.name}</h1>
+            <h1 className="text-4xl font-bold text-foreground mb-2">{game.name}</h1>
             {game.first_release_date && (
-              <p className="text-lg text-zinc-600 flex items-center gap-2">
+              <p className="text-lg text-muted-foreground flex items-center gap-2">
                 <Calendar className="h-5 w-5" />
                 {fmtDate(game.first_release_date)}
               </p>
@@ -141,7 +141,7 @@ export default async function GamePage({ params }: GamePageProps) {
           {rating && (
             <div className="flex items-center gap-4">
               <Stars rating={stars} size="lg" showValue />
-              <div className="text-sm text-zinc-600">
+              <div className="text-sm text-muted-foreground">
                 {ratingCount && (
                   <span>Based on {compact(ratingCount)} ratings</span>
                 )}
@@ -152,14 +152,14 @@ export default async function GamePage({ params }: GamePageProps) {
           {/* Platforms */}
           {platforms.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-zinc-700 mb-2 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
                 <Tag className="h-4 w-4" />
                 Platforms
               </h3>
               <div className="flex flex-wrap gap-2">
                 {platforms.filter((p: any) => p.id && p.name).map((platform: any) => (
                   <Link key={platform.id} href={buildGamesUrl({ platformIds: [platform.id!] })}>
-                    <Badge variant="secondary" className="text-sm hover:bg-zinc-200 cursor-pointer transition-colors">
+                    <Badge variant="secondary" className="text-sm hover:bg-secondary/80 cursor-pointer transition-colors">
                       {platform.abbreviation || platform.name}
                     </Badge>
                   </Link>
@@ -171,11 +171,11 @@ export default async function GamePage({ params }: GamePageProps) {
           {/* Genres */}
           {genres.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-zinc-700 mb-2">Genres</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-2">Genres</h3>
               <div className="flex flex-wrap gap-2">
                 {genres.filter((g: any) => g.id && g.name).map((genre: any) => (
                   <Link key={genre.id} href={buildGamesUrl({ genreIds: [genre.id!] })}>
-                    <Badge variant="outline" className="text-sm hover:bg-zinc-50 cursor-pointer transition-colors">
+                    <Badge variant="outline" className="text-sm hover:bg-accent/80 cursor-pointer transition-colors">
                       {genre.name}
                     </Badge>
                   </Link>
@@ -187,14 +187,14 @@ export default async function GamePage({ params }: GamePageProps) {
           {/* Developers */}
           {developers.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-zinc-700 mb-2 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 Developers
               </h3>
               <div className="flex flex-wrap gap-2">
                 {developers.map((dev: any) => (
                   <Link key={dev.company?.id || Math.random()} href={buildGamesUrl({ developerCompanyId: dev.company?.id })}>
-                    <Badge variant="outline" className="text-sm hover:bg-zinc-50 cursor-pointer transition-colors">
+                    <Badge variant="outline" className="text-sm hover:bg-accent/80 cursor-pointer transition-colors">
                       {dev.company?.name}
                     </Badge>
                   </Link>
@@ -249,7 +249,7 @@ export default async function GamePage({ params }: GamePageProps) {
                 <CardTitle>Overview</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-zinc-700 leading-relaxed">{game.summary}</p>
+                <p className="text-foreground leading-relaxed">{game.summary}</p>
               </CardContent>
             </Card>
           )}
@@ -387,15 +387,15 @@ export default async function GamePage({ params }: GamePageProps) {
             <CardContent className="space-y-4">
               {game.first_release_date && (
                 <div>
-                  <h4 className="text-sm font-semibold text-zinc-700">Release Date</h4>
-                  <p className="text-sm text-zinc-600">{fmtDate(game.first_release_date)}</p>
+                  <h4 className="text-sm font-semibold text-foreground">Release Date</h4>
+                  <p className="text-sm text-muted-foreground">{fmtDate(game.first_release_date)}</p>
                 </div>
               )}
               
               {platforms.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-zinc-700">Platforms</h4>
-                  <p className="text-sm text-zinc-600">
+                  <h4 className="text-sm font-semibold text-foreground">Platforms</h4>
+                  <p className="text-sm text-muted-foreground">
                     {platforms.map((p: any) => p.abbreviation || p.name).join(', ')}
                   </p>
                 </div>
@@ -403,8 +403,8 @@ export default async function GamePage({ params }: GamePageProps) {
               
               {genres.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-zinc-700">Genres</h4>
-                  <p className="text-sm text-zinc-600">
+                  <h4 className="text-sm font-semibold text-foreground">Genres</h4>
+                  <p className="text-sm text-muted-foreground">
                     {genres.map((g: any) => g.name).join(', ')}
                   </p>
                 </div>
@@ -412,8 +412,8 @@ export default async function GamePage({ params }: GamePageProps) {
               
               {developers.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-zinc-700">Developers</h4>
-                  <p className="text-sm text-zinc-600">
+                  <h4 className="text-sm font-semibold text-foreground">Developers</h4>
+                  <p className="text-sm text-muted-foreground">
                     {developers.map((d: any) => d.company?.name).filter(Boolean).join(', ')}
                   </p>
                 </div>
@@ -421,14 +421,14 @@ export default async function GamePage({ params }: GamePageProps) {
 
               {rating && (
                 <div>
-                  <h4 className="text-sm font-semibold text-zinc-700">Rating</h4>
+                  <h4 className="text-sm font-semibold text-foreground">Rating</h4>
                   <div className="flex items-center gap-2">
                     <Stars rating={stars} size="sm" />
-                    <span className="text-sm text-zinc-600">
+                    <span className="text-sm text-muted-foreground">
                       {Math.round(rating / 10)}/10
                     </span>
                     {ratingCount && (
-                      <span className="text-xs text-zinc-500">
+                      <span className="text-xs text-muted-foreground">
                         ({compact(ratingCount)} ratings)
                       </span>
                     )}

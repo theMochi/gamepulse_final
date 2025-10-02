@@ -118,7 +118,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
               variant="ghost"
               size="sm"
               onClick={handleReset}
-              className="ml-auto text-xs text-zinc-500 hover:text-zinc-700"
+              className="ml-auto text-xs text-muted-foreground hover:text-foreground"
             >
               Reset
             </Button>
@@ -129,7 +129,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
       <CardContent className="space-y-6">
         {/* Sort */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-700">Sort by</label>
+          <label className="text-sm font-medium text-foreground">Sort by</label>
           <Select value={sort} onValueChange={setSort}>
             <SelectTrigger>
               <SelectValue />
@@ -146,7 +146,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
 
         {/* Min Rating Slider */}
         <div className="space-y-3">
-          <label className="text-sm font-medium text-zinc-700">
+          <label className="text-sm font-medium text-foreground">
             Minimum Rating: {minRating}/100
           </label>
           <div className="px-2">
@@ -157,9 +157,9 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
               step="5"
               value={minRating}
               onChange={(e) => setMinRating(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-muted-foreground mt-1">
               <span>0</span>
               <span>50</span>
               <span>100</span>
@@ -169,7 +169,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
 
         {/* Min Review Count Slider */}
         <div className="space-y-3">
-          <label className="text-sm font-medium text-zinc-700">
+          <label className="text-sm font-medium text-foreground">
             Minimum Reviews: {minReviewCount.toLocaleString()}
           </label>
           <div className="px-2">
@@ -180,9 +180,9 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
               step="100"
               value={minReviewCount}
               onChange={(e) => setMinReviewCount(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-muted-foreground mt-1">
               <span>0</span>
               <span>5K</span>
               <span>10K+</span>
@@ -192,7 +192,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
 
         {/* Platforms Dropdown */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-700">Platforms</label>
+          <label className="text-sm font-medium text-foreground">Platforms</label>
           <div className="relative">
             <button
               onClick={() => setPlatformsOpen(!platformsOpen)}
@@ -255,7 +255,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
 
         {/* Genres Dropdown */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-700">Genres</label>
+          <label className="text-sm font-medium text-foreground">Genres</label>
           <div className="relative">
             <button
               onClick={() => setGenresOpen(!genresOpen)}

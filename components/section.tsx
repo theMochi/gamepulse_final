@@ -12,7 +12,7 @@ interface SectionProps {
 
 export function Section({ eyebrow, title, description, href, children, className }: SectionProps) {
   return (
-    <section className={cn('relative mt-16 mb-20', className)}>
+    <section className={cn('relative mt-8 mb-12', className)}>
       {/* Subtle background accent */}
       <div className="pointer-events-none absolute inset-x-0 -top-6 h-24 bg-gradient-to-b from-card/70 to-transparent" />
       
