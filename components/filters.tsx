@@ -210,7 +210,12 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
             {platformsOpen && (
               <div className="absolute top-full left-0 right-0 z-10 mt-1 max-h-48 overflow-y-auto rounded-md border border-border bg-card shadow-lg">
                 <div className="p-2 space-y-1">
-                  {platforms.slice(0, 30).map((platform) => (
+                  {[
+                    { id: 'playstation', name: 'PlayStation' },
+                    { id: 'xbox', name: 'Xbox' },
+                    { id: 'nintendo', name: 'Nintendo' },
+                    { id: 'pc', name: 'PC' }
+                  ].map((platform) => (
                     <label
                       key={platform.id}
                       className="flex items-center gap-2 p-2 hover:bg-accent rounded cursor-pointer"
@@ -222,7 +227,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
                         className="rounded border-border bg-background text-primary focus:ring-primary"
                       />
                       <span className="text-sm text-foreground">
-                        {platform.abbreviation || platform.name}
+                        {platform.name}
                       </span>
                     </label>
                   ))}
@@ -235,8 +240,13 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
           {selectedPlatforms.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {selectedPlatforms.map((platformId) => {
-                const platform = platforms.find(p => p.id === platformId);
-                if (!platform) return null;
+                const platformMap: Record<string, string> = {
+                  'playstation': 'PlayStation',
+                  'xbox': 'Xbox', 
+                  'nintendo': 'Nintendo',
+                  'pc': 'PC'
+                };
+                const platformName = platformMap[platformId] || platformId;
                 return (
                   <Badge
                     key={platformId}
@@ -244,7 +254,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
                     className="text-xs cursor-pointer"
                     onClick={() => togglePlatform(platformId)}
                   >
-                    {platform.abbreviation || platform.name}
+                    {platformName}
                     <X className="h-3 w-3 ml-1" />
                   </Badge>
                 );

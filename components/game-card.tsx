@@ -78,7 +78,7 @@ export function GameCard({ game, className, showSummary = false }: GameCardProps
               <div className="flex flex-wrap gap-1 min-h-[1.5rem]" onClick={(e) => e.stopPropagation()}>
                 {genres.filter(g => g.id && g.name).slice(0,2).map((g) => (
                   <Link key={g.id} href={buildGamesUrl({genreIds:[g.id!]})} onClick={(e) => e.stopPropagation()}>
-                    <Badge className="text-xs px-2 py-0.5 text-purple-400 border-purple-500/30 hover:bg-purple-500/10 cursor-pointer transition-colors border">
+                    <Badge className="text-xs px-2 py-0.5 bg-accent text-accent-foreground border-border hover:bg-accent/80 cursor-pointer transition-colors border">
                       {g.name}
                     </Badge>
                   </Link>
