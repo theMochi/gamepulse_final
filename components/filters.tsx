@@ -198,7 +198,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
               onClick={() => setPlatformsOpen(!platformsOpen)}
               className="flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <span className="text-zinc-600">
+              <span className="text-muted-foreground">
                 {selectedPlatforms.length > 0 
                   ? `${selectedPlatforms.length} selected`
                   : 'Select platforms...'
@@ -208,20 +208,20 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
             </button>
             
             {platformsOpen && (
-              <div className="absolute top-full left-0 right-0 z-10 mt-1 max-h-48 overflow-y-auto rounded-md border bg-white shadow-lg">
+              <div className="absolute top-full left-0 right-0 z-10 mt-1 max-h-48 overflow-y-auto rounded-md border border-border bg-card shadow-lg">
                 <div className="p-2 space-y-1">
                   {platforms.slice(0, 30).map((platform) => (
                     <label
                       key={platform.id}
-                      className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                      className="flex items-center gap-2 p-2 hover:bg-accent rounded cursor-pointer"
                     >
                       <input
                         type="checkbox"
                         checked={selectedPlatforms.includes(platform.id)}
                         onChange={() => togglePlatform(platform.id)}
-                        className="rounded border-gray-300"
+                        className="rounded border-border bg-background text-primary focus:ring-primary"
                       />
-                      <span className="text-sm">
+                      <span className="text-sm text-foreground">
                         {platform.abbreviation || platform.name}
                       </span>
                     </label>
@@ -261,7 +261,7 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
               onClick={() => setGenresOpen(!genresOpen)}
               className="flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <span className="text-zinc-600">
+              <span className="text-muted-foreground">
                 {selectedGenres.length > 0 
                   ? `${selectedGenres.length} selected`
                   : 'Select genres...'
@@ -271,20 +271,20 @@ export function Filters({ platforms, genres, className, isSticky = true }: Filte
             </button>
             
             {genresOpen && (
-              <div className="absolute top-full left-0 right-0 z-10 mt-1 max-h-48 overflow-y-auto rounded-md border bg-white shadow-lg">
+              <div className="absolute top-full left-0 right-0 z-10 mt-1 max-h-48 overflow-y-auto rounded-md border border-border bg-card shadow-lg">
                 <div className="p-2 space-y-1">
                   {genres.map((genre) => (
                     <label
                       key={genre.id}
-                      className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                      className="flex items-center gap-2 p-2 hover:bg-accent rounded cursor-pointer"
                     >
                       <input
                         type="checkbox"
                         checked={selectedGenres.includes(genre.id)}
                         onChange={() => toggleGenre(genre.id)}
-                        className="rounded border-gray-300"
+                        className="rounded border-border bg-background text-primary focus:ring-primary"
                       />
-                      <span className="text-sm">{genre.name}</span>
+                      <span className="text-sm text-foreground">{genre.name}</span>
                     </label>
                   ))}
                 </div>
