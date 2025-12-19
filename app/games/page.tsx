@@ -13,7 +13,8 @@ import {
   Star,
   Calendar,
   ChevronDown,
-  Loader2
+  Loader2,
+  TrendingUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GameFilters } from '@/components/games/GameFilters';
@@ -197,32 +198,45 @@ function getReleaseYear(timestamp?: number): number | undefined {
   return new Date(timestamp * 1000).getFullYear();
 }
 
+function getScoreColor(score: number) {
+  if (score >= 90) return 'from-emerald-400 to-cyan-400 text-emerald-400 border-emerald-400/30';
+  if (score >= 70) return 'from-yellow-400 to-orange-400 text-yellow-400 border-yellow-400/30';
+  if (score >= 50) return 'from-orange-400 to-red-400 text-orange-400 border-orange-400/30';
+  return 'from-red-400 to-red-600 text-red-400 border-red-400/30';
+}
+
 // ============================================================================
 // GAME CARD COMPONENT
 // ============================================================================
 
 function GameCard({ game }: { game: Game }) {
-  const rating = (game.total_rating || 0) / 20; // Convert 0-100 to 0-5
+  const rating = game.total_rating || 0;
   const releaseYear = getReleaseYear(game.first_release_date);
 
   return (
     <Link href={`/game/${game.id}`} className="group">
-      <article className="relative flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white transition-all duration-300 hover:border-neutral-300 hover:shadow-lg hover:shadow-neutral-200/50 hover:-translate-y-1">
+      <article className="game-card h-full flex flex-col overflow-hidden">
         {/* Cover Image */}
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-100">
+        <div className="relative aspect-[3/4] w-full overflow-hidden">
           <Image
             src={getCoverUrl(game.cover?.image_id)}
             alt={game.name}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-300 group-hover:scale-110"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
           
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+          
           {/* Rating Badge */}
           {game.total_rating && (
-            <div className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-white/95 px-2 py-1 text-xs font-semibold shadow-sm backdrop-blur-sm">
-              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-              <span className="text-neutral-900">{rating.toFixed(1)}</span>
+            <div className={cn(
+              "absolute right-2 top-2 flex items-center justify-center h-9 w-9 rounded-lg font-display font-bold text-sm",
+              "bg-background/90 border backdrop-blur-sm",
+              getScoreColor(rating)
+            )}>
+              {Math.round(rating / 10)}
             </div>
           )}
         </div>
@@ -230,14 +244,14 @@ function GameCard({ game }: { game: Game }) {
         {/* Content */}
         <div className="flex flex-1 flex-col p-4">
           {/* Title */}
-          <h3 className="text-sm font-semibold text-neutral-900 line-clamp-2 leading-snug min-h-[2.5rem]">
+          <h3 className="text-sm font-semibold text-foreground line-clamp-2 leading-snug min-h-[2.5rem] group-hover:text-primary transition-colors">
             {game.name}
           </h3>
 
           {/* Release Year */}
           {releaseYear && (
-            <div className="mt-1.5 flex items-center gap-1 text-xs text-neutral-500">
-              <Calendar className="h-3 w-3" />
+            <div className="mt-1.5 flex items-center gap-1 text-xs text-muted-foreground">
+              <Calendar className="h-3 w-3 text-primary" />
               <span>{releaseYear}</span>
             </div>
           )}
@@ -246,21 +260,21 @@ function GameCard({ game }: { game: Game }) {
           <div className="flex-1" />
 
           {/* Rating & Reviews */}
-          <div className="mt-3 flex items-center justify-between border-t border-neutral-100 pt-3">
+          <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-3">
             <div className="flex items-center gap-0.5">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
                   className={cn(
                     'h-3 w-3',
-                    star <= Math.floor(rating)
-                      ? 'fill-amber-400 text-amber-400'
-                      : 'text-neutral-300'
+                    star <= Math.floor(rating / 20)
+                      ? 'fill-primary text-primary'
+                      : 'text-muted-foreground/30'
                   )}
                 />
               ))}
             </div>
-            <span className="text-xs text-neutral-500">
+            <span className="text-xs text-muted-foreground">
               {formatReviewCount(game.total_rating_count || 0)} reviews
             </span>
           </div>
@@ -271,7 +285,7 @@ function GameCard({ game }: { game: Game }) {
               {game.genres.slice(0, 2).map((genre) => (
                 <span
                   key={genre.id}
-                  className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-neutral-600"
+                  className="rounded-full bg-primary/10 border border-primary/20 px-2 py-0.5 text-[10px] font-medium text-primary"
                 >
                   {genre.name}
                 </span>
@@ -286,12 +300,12 @@ function GameCard({ game }: { game: Game }) {
 
 function GameCardSkeleton() {
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white">
-      <div className="aspect-[3/4] w-full animate-pulse bg-neutral-200" />
+    <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card">
+      <div className="aspect-[3/4] w-full shimmer" />
       <div className="p-4 space-y-3">
-        <div className="h-4 w-3/4 animate-pulse rounded bg-neutral-200" />
-        <div className="h-3 w-1/2 animate-pulse rounded bg-neutral-200" />
-        <div className="h-3 w-full animate-pulse rounded bg-neutral-100" />
+        <div className="h-4 w-3/4 shimmer rounded" />
+        <div className="h-3 w-1/2 shimmer rounded" />
+        <div className="h-3 w-full shimmer rounded" />
       </div>
     </div>
   );
@@ -424,14 +438,20 @@ function GamesPageContent() {
   ].filter(Boolean).length;
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8 lg:py-12">
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         {/* Page Header */}
         <div className="mb-8 lg:mb-12">
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 lg:text-4xl">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="h-5 w-5 text-primary" />
+            <span className="text-xs font-display font-bold uppercase tracking-widest text-primary">
+              Browse
+            </span>
+          </div>
+          <h1 className="text-3xl lg:text-4xl font-display font-bold tracking-tight text-foreground uppercase">
             {getPageTitle()}
           </h1>
-          <p className="mt-2 text-neutral-500">
+          <p className="mt-2 text-muted-foreground">
             Discover your next favorite game from our curated collection
           </p>
         </div>
@@ -442,30 +462,30 @@ function GamesPageContent() {
             <button
               onClick={() => setIsFilterOpen(true)}
               className={cn(
-                'inline-flex items-center gap-2 rounded-lg border border-neutral-200 px-4 py-2.5 text-sm font-medium transition-colors',
+                'inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors',
                 activeFilterCount > 0
-                  ? 'border-accent bg-accent/5 text-accent'
-                  : 'text-neutral-600 hover:bg-neutral-50'
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-border text-muted-foreground hover:bg-muted/50 hover:text-foreground'
               )}
             >
               <SlidersHorizontal className="h-4 w-4" />
               Filters
               {activeFilterCount > 0 && (
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-xs text-white">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                   {activeFilterCount}
                 </span>
               )}
             </button>
 
             {/* View Toggle */}
-            <div className="flex items-center gap-1 rounded-lg border border-neutral-200 p-1">
+            <div className="flex items-center gap-1 rounded-lg border border-border p-1 bg-card">
               <button
                 onClick={() => setViewMode('grid')}
                 className={cn(
                   'flex h-8 w-8 items-center justify-center rounded-md transition-colors',
                   viewMode === 'grid'
-                    ? 'bg-neutral-900 text-white'
-                    : 'text-neutral-400 hover:text-neutral-600'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <Grid className="h-4 w-4" />
@@ -475,8 +495,8 @@ function GamesPageContent() {
                 className={cn(
                   'flex h-8 w-8 items-center justify-center rounded-md transition-colors',
                   viewMode === 'list'
-                    ? 'bg-neutral-900 text-white'
-                    : 'text-neutral-400 hover:text-neutral-600'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 <LayoutList className="h-4 w-4" />
@@ -505,19 +525,19 @@ function GamesPageContent() {
           <main className="flex-1">
             {/* Results Header */}
             <div className="mb-6 flex items-center justify-between">
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-muted-foreground">
                 {loading ? 'Loading...' : `${games.length} games found`}
               </p>
 
               {/* Desktop View Toggle */}
-              <div className="hidden items-center gap-1 rounded-lg border border-neutral-200 p-1 lg:flex">
+              <div className="hidden items-center gap-1 rounded-lg border border-border p-1 bg-card lg:flex">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={cn(
                     'flex h-8 w-8 items-center justify-center rounded-md transition-colors',
                     viewMode === 'grid'
-                      ? 'bg-neutral-900 text-white'
-                      : 'text-neutral-400 hover:text-neutral-600'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
                   <Grid className="h-4 w-4" />
@@ -527,8 +547,8 @@ function GamesPageContent() {
                   className={cn(
                     'flex h-8 w-8 items-center justify-center rounded-md transition-colors',
                     viewMode === 'list'
-                      ? 'bg-neutral-900 text-white'
-                      : 'text-neutral-400 hover:text-neutral-600'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
                   <LayoutList className="h-4 w-4" />
@@ -537,11 +557,11 @@ function GamesPageContent() {
             </div>
 
             {error ? (
-              <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center">
-                <p className="text-red-600 mb-4">{error}</p>
+              <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-8 text-center">
+                <p className="text-destructive mb-4">{error}</p>
                 <button
                   onClick={() => fetchGames(true)}
-                  className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+                  className="inline-flex items-center gap-2 rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground hover:bg-destructive/90"
                 >
                   Try Again
                 </button>
@@ -551,7 +571,7 @@ function GamesPageContent() {
                 {/* Games Grid */}
                 <div
                   className={cn(
-                    'grid gap-5',
+                    'grid gap-4',
                     viewMode === 'grid'
                       ? 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
                       : 'grid-cols-1'
@@ -573,7 +593,11 @@ function GamesPageContent() {
                   <div className="mt-12 text-center">
                     <button
                       onClick={loadMore}
-                      className="inline-flex items-center gap-2 rounded-lg border border-neutral-200 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+                      className={cn(
+                        "inline-flex items-center gap-2 rounded-lg border border-border px-6 py-3 font-display font-semibold uppercase tracking-wide text-sm",
+                        "text-foreground transition-all",
+                        "hover:border-primary/50 hover:bg-primary/10"
+                      )}
                     >
                       Load More Games
                       <ChevronDown className="h-4 w-4" />
@@ -584,20 +608,20 @@ function GamesPageContent() {
                 {/* Loading indicator for load more */}
                 {loading && page > 1 && (
                   <div className="mt-12 flex justify-center">
-                    <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
                   </div>
                 )}
 
                 {/* No Results */}
                 {!loading && games.length === 0 && (
                   <div className="py-16 text-center">
-                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100">
-                      <Search className="h-8 w-8 text-neutral-400" />
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+                      <Search className="h-8 w-8 text-muted-foreground" />
                     </div>
-                    <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+                    <h3 className="text-lg font-display font-bold text-foreground mb-2 uppercase">
                       No games found
                     </h3>
-                    <p className="text-neutral-500 max-w-md mx-auto">
+                    <p className="text-muted-foreground max-w-md mx-auto">
                       Try adjusting your filters or search criteria to find more games.
                     </p>
                   </div>
@@ -606,7 +630,7 @@ function GamesPageContent() {
                 {/* End of Results */}
                 {!loading && !hasMore && games.length > 0 && (
                   <div className="mt-12 text-center">
-                    <p className="text-sm text-neutral-400">
+                    <p className="text-sm text-muted-foreground">
                       You've reached the end of the list
                     </p>
                   </div>
@@ -628,13 +652,13 @@ export default function GamesPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-white">
-          <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+        <div className="min-h-screen">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
             <div className="mb-12">
-              <div className="h-10 w-48 animate-pulse rounded bg-neutral-200" />
-              <div className="mt-2 h-5 w-72 animate-pulse rounded bg-neutral-100" />
+              <div className="h-10 w-48 shimmer rounded" />
+              <div className="mt-2 h-5 w-72 shimmer rounded" />
             </div>
-            <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {[...Array(12)].map((_, i) => (
                 <GameCardSkeleton key={i} />
               ))}

@@ -4,68 +4,53 @@
 
 @layer base {
   :root {
-    /* Minimalistic Monochrome Theme with Muted Electric Blue Accent */
+    /* Dark Gaming Theme - Cyberpunk Inspired */
     
-    /* Base colors - Clean whites and subtle grays */
-    --background: 0 0% 100%; /* Pure white */
-    --foreground: 0 0% 9%; /* Near black for text */
+    /* Base colors - Deep dark with slight blue tint */
+    --background: 225 15% 6%; /* #0d0f14 */
+    --foreground: 210 40% 96%; /* Light text */
     
-    /* Card and surface colors */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    /* Card and surface colors - Elevated dark surfaces */
+    --card: 225 15% 9%; /* Slightly lighter than bg */
+    --card-foreground: 210 40% 96%;
+    --popover: 225 15% 10%;
+    --popover-foreground: 210 40% 96%;
     
-    /* Muted Electric Blue - Primary accent */
-    --primary: 217 91% 60%; /* #3B82F6 - A refined blue */
-    --primary-foreground: 0 0% 100%;
+    /* Primary - Electric Cyan */
+    --primary: 185 100% 50%; /* #00d4ff - Neon cyan */
+    --primary-foreground: 225 15% 6%;
     
-    /* Secondary - Subtle gray for backgrounds */
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
+    /* Secondary - Deep purple surface */
+    --secondary: 260 30% 15%;
+    --secondary-foreground: 210 40% 96%;
     
     /* Muted - For subtle text and backgrounds */
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 225 15% 15%;
+    --muted-foreground: 215 20% 55%;
     
-    /* Accent - Same as primary for consistency */
-    --accent: 217 91% 60%;
+    /* Accent - Neon Magenta */
+    --accent: 325 100% 60%; /* #ff3399 - Hot pink/magenta */
     --accent-foreground: 0 0% 100%;
     
-    /* Destructive - For errors */
-    --destructive: 0 84% 60%;
+    /* Destructive - Neon Red */
+    --destructive: 0 90% 55%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Border and input - Light gray */
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 217 91% 60%;
+    /* Border and input - Subtle glow borders */
+    --border: 225 15% 18%;
+    --input: 225 15% 12%;
+    --ring: 185 100% 50%;
     
-    /* Radius - Slightly softer corners */
-    --radius: 0.5rem;
-  }
-
-  /* Dark mode variant (optional) */
-  .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 217 91% 60%;
+    /* Gaming accent colors */
+    --neon-cyan: 185 100% 50%;
+    --neon-magenta: 325 100% 60%;
+    --neon-purple: 270 100% 65%;
+    --neon-green: 150 100% 45%;
+    --neon-orange: 25 100% 55%;
+    --neon-yellow: 50 100% 50%;
+    
+    /* Radius */
+    --radius: 0.75rem;
   }
 }
 
@@ -75,7 +60,8 @@
   }
   
   html {
-    @apply antialiased;
+    @apply antialiased scroll-smooth;
+    color-scheme: dark;
   }
   
   body {
@@ -83,29 +69,143 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Smooth focus states */
+  /* Smooth focus states with glow */
   :focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-background;
+    @apply outline-none ring-2 ring-primary/50 ring-offset-2 ring-offset-background;
+  }
+
+  /* Custom selection color */
+  ::selection {
+    @apply bg-primary/30 text-foreground;
   }
 }
 
 @layer components {
+  /* Neon glow effects */
+  .glow-cyan {
+    box-shadow: 0 0 20px hsl(185 100% 50% / 0.3), 
+                0 0 40px hsl(185 100% 50% / 0.1);
+  }
+  
+  .glow-magenta {
+    box-shadow: 0 0 20px hsl(325 100% 60% / 0.3), 
+                0 0 40px hsl(325 100% 60% / 0.1);
+  }
+  
+  .glow-purple {
+    box-shadow: 0 0 20px hsl(270 100% 65% / 0.3), 
+                0 0 40px hsl(270 100% 65% / 0.1);
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 10px hsl(185 100% 50% / 0.5),
+                 0 0 20px hsl(185 100% 50% / 0.3);
+  }
+
+  .text-glow-magenta {
+    text-shadow: 0 0 10px hsl(325 100% 60% / 0.5),
+                 0 0 20px hsl(325 100% 60% / 0.3);
+  }
+
+  /* Gaming card style */
+  .game-card {
+    @apply bg-card border border-border rounded-xl overflow-hidden;
+    @apply transition-all duration-300;
+    @apply hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10;
+  }
+
+  /* Gradient borders */
+  .gradient-border {
+    position: relative;
+  }
+  
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(185 100% 50%), hsl(325 100% 60%));
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
   /* Custom scrollbar for webkit browsers */
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-transparent;
+    @apply bg-muted/50 rounded-full;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-neutral-300 rounded-full;
+    @apply bg-primary/30 rounded-full;
+    @apply hover:bg-primary/50;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-neutral-400;
+  /* Animated gradient background */
+  .animated-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(225 15% 6%) 0%,
+      hsl(260 30% 10%) 50%,
+      hsl(225 15% 6%) 100%
+    );
+    background-size: 200% 200%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Glassmorphism effect for dark theme */
+  .glass-dark {
+    @apply bg-card/80 backdrop-blur-xl border border-white/5;
+  }
+
+  /* Badge styles */
+  .badge-neon {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+    @apply bg-primary/20 text-primary border border-primary/30;
+  }
+
+  .badge-hot {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+    @apply bg-gradient-to-r from-orange-500/20 to-red-500/20 text-orange-400 border border-orange-500/30;
+  }
+
+  /* Pulse animation for live indicators */
+  .pulse-live {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Scan line effect (subtle) */
+  .scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+    pointer-events: none;
   }
 }
 
@@ -115,14 +215,17 @@
     text-wrap: balance;
   }
 
-  /* Subtle text gradient */
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-neutral-900 to-neutral-600;
+  /* Gradient text effects */
+  .text-gradient-cyan {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500;
   }
 
-  /* Glass morphism effect */
-  .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-neutral-200/50;
+  .text-gradient-magenta {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500;
+  }
+
+  .text-gradient-rainbow {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500;
   }
 
   /* Hide scrollbar but allow scrolling */
@@ -134,31 +237,81 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Staggered animation delays */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
 }
 
-/* Custom slider styles */
+/* Slider styles - Gaming theme */
 .slider::-webkit-slider-thumb {
   appearance: none;
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #18181b;
+  background: hsl(185 100% 50%);
   cursor: pointer;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid hsl(225 15% 6%);
+  box-shadow: 0 0 10px hsl(185 100% 50% / 0.5);
 }
 
 .slider::-moz-range-thumb {
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #18181b;
+  background: hsl(185 100% 50%);
   cursor: pointer;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid hsl(225 15% 6%);
+  box-shadow: 0 0 10px hsl(185 100% 50% / 0.5);
 }
 
-/* Chip utility style */
+/* Chip utility style - Gaming version */
 .chip { 
-  @apply inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-2 py-1 text-xs text-neutral-700 hover:bg-neutral-100 transition-colors; 
+  @apply inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs text-primary font-medium;
+  @apply hover:bg-primary/20 hover:border-primary/50 transition-all;
+}
+
+/* Entry animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+/* Shimmer effect for loading states */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(225 15% 15%) 0%,
+    hsl(225 15% 20%) 50%,
+    hsl(225 15% 15%) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }

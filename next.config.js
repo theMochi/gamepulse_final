@@ -7,6 +7,16 @@ const nextConfig = {
         hostname: 'images.igdb.com',
         pathname: '/igdb/image/upload/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'yt3.googleusercontent.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'yt3.ggpht.com',
+        pathname: '/**',
+      },
     ],
   },
   experimental: {
