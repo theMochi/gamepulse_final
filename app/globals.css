@@ -4,27 +4,68 @@
 
 @layer base {
   :root {
-    /* Dark theme colors matching the design */
-    --background: 220 27% 6%; /* #10101A - Very dark blue */
-    --foreground: 220 13% 95%; /* Light off-white */
-    --card: 220 27% 10%; /* #1A1A2E - Slightly lighter dark */
-    --card-foreground: 220 13% 95%;
-    --popover: 220 27% 10%;
-    --popover-foreground: 220 13% 95%;
-    --primary: 238 100% 67%; /* #4F46E5 - Vibrant blue */
+    /* Minimalistic Monochrome Theme with Muted Electric Blue Accent */
+    
+    /* Base colors - Clean whites and subtle grays */
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 0 0% 9%; /* Near black for text */
+    
+    /* Card and surface colors */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    
+    /* Muted Electric Blue - Primary accent */
+    --primary: 217 91% 60%; /* #3B82F6 - A refined blue */
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 27% 15%;
-    --secondary-foreground: 220 13% 95%;
-    --muted: 220 27% 15%;
-    --muted-foreground: 220 13% 70%;
-    --accent: 220 27% 15%;
-    --accent-foreground: 220 13% 95%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 27% 20%;
-    --input: 220 27% 15%;
-    --ring: 238 100% 67%;
+    
+    /* Secondary - Subtle gray for backgrounds */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    
+    /* Muted - For subtle text and backgrounds */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    
+    /* Accent - Same as primary for consistency */
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Destructive - For errors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Border and input - Light gray */
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 217 91% 60%;
+    
+    /* Radius - Slightly softer corners */
     --radius: 0.5rem;
+  }
+
+  /* Dark mode variant (optional) */
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 217 91% 60%;
   }
 }
 
@@ -32,8 +73,66 @@
   * {
     @apply border-border;
   }
+  
+  html {
+    @apply antialiased;
+  }
+  
   body {
     @apply bg-background text-foreground min-h-screen;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Smooth focus states */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer components {
+  /* Custom scrollbar for webkit browsers */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-neutral-300 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-neutral-400;
+  }
+}
+
+@layer utilities {
+  /* Text balance for headings */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Subtle text gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-neutral-900 to-neutral-600;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-neutral-200/50;
+  }
+
+  /* Hide scrollbar but allow scrolling */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
