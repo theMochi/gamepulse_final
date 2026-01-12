@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import Link from 'next/link';
 import { getGameCoverUrl } from '@/utils/img';
 import Image from 'next/image';
-import { Heart, Gamepad2, Star, ListChecks, ChevronRight, Clock } from 'lucide-react';
+import { Heart, Gamepad2, Star, ListChecks, ChevronRight, Calendar } from 'lucide-react';
 
 const prisma = new PrismaClient();
 
@@ -41,7 +41,7 @@ function GuestCTA() {
           {[
             { icon: Heart, label: 'Favorites', desc: 'Love it' },
             { icon: Gamepad2, label: 'Played', desc: 'Finished' },
-            { icon: Clock, label: 'Planning', desc: 'Next up' },
+            { icon: Calendar, label: 'Planning', desc: 'Next up' },
             { icon: Star, label: 'Wishlist', desc: 'Want it' },
           ].map((item) => (
             <div key={item.label} className="bg-card/50 border border-border/50 rounded-xl p-4">
