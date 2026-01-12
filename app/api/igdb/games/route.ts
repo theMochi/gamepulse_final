@@ -11,6 +11,8 @@ const SearchParamsSchema = z.object({
   platformIds: z.string().optional(), // comma-separated platform IDs
   developerCompanyId: z.coerce.number().optional(),
   year: z.coerce.number().optional(),
+  yearStart: z.coerce.number().optional(), // year range start
+  yearEnd: z.coerce.number().optional(), // year range end
   comingSoon: z.string().optional(),
   sort: z.enum(['hot', 'rating', 'count', 'newest', 'release_asc']).optional(),
   limit: z.coerce.number().min(1).max(100).optional(),
@@ -36,6 +38,8 @@ async function buildStructuredQuery(filters: {
   platformIds?: number[];
   developerCompanyId?: number;
   year?: number;
+  yearStart?: number;
+  yearEnd?: number;
   comingSoon?: string;
   sort?: string;
   limit?: number;
@@ -63,8 +67,13 @@ async function buildStructuredQuery(filters: {
     conditions.push(`involved_companies.company = (${filters.developerCompanyId}) & involved_companies.developer = true`);
   }
 
-  // Handle year filter
-  if (filters.year && Number.isFinite(filters.year)) {
+  // Handle year range filter
+  if (filters.yearStart && filters.yearEnd && Number.isFinite(filters.yearStart) && Number.isFinite(filters.yearEnd)) {
+    const from = Math.floor(Date.UTC(filters.yearStart, 0, 1) / 1000);
+    const to = Math.floor(Date.UTC(filters.yearEnd + 1, 0, 1) / 1000);
+    conditions.push(`first_release_date >= ${from} & first_release_date < ${to}`);
+  } else if (filters.year && Number.isFinite(filters.year)) {
+    // Handle single year filter (backwards compatibility)
     const from = Math.floor(Date.UTC(filters.year, 0, 1) / 1000);
     const to = Math.floor(Date.UTC(filters.year + 1, 0, 1) / 1000);
     conditions.push(`first_release_date >= ${from} & first_release_date < ${to}`);
@@ -162,6 +171,8 @@ export async function GET(request: NextRequest) {
           platformIds,
           developerCompanyId: params.developerCompanyId,
           year: params.year,
+          yearStart: params.yearStart,
+          yearEnd: params.yearEnd,
           comingSoon: params.comingSoon,
           sort: params.sort || 'hot',
           limit: params.limit,

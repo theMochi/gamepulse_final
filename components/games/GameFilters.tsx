@@ -247,10 +247,12 @@ function PlatformCheckboxes({
   return (
     <div className="space-y-2">
       {PLATFORM_OPTIONS.map((platform) => (
-        <label
+        <button
           key={platform.id}
+          type="button"
+          onClick={() => togglePlatform(platform.id)}
           className={cn(
-            'flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 transition-all',
+            'flex w-full cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 transition-all',
             selected.includes(platform.id)
               ? 'border-primary bg-primary/10 text-foreground'
               : 'border-border bg-muted/30 text-muted-foreground hover:border-primary/50 hover:bg-muted/50'
@@ -270,7 +272,7 @@ function PlatformCheckboxes({
           </div>
           <span className="text-sm">{platform.icon}</span>
           <span className="text-sm font-medium">{platform.name}</span>
-        </label>
+        </button>
       ))}
     </div>
   );
