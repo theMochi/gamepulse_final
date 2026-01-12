@@ -17,6 +17,10 @@ import ReviewForm from '@/components/review-form';
 import FavoriteButton from '@/components/favorite-button';
 import ListButtons from '@/components/list-buttons';
 
+// Force dynamic rendering to ensure fresh data on each request
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface GamePageProps {
   params: {
     id: string;
