@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { Heart } from 'lucide-react';
 
 interface FavoriteButtonProps {
   igdbId: number;
@@ -45,13 +46,14 @@ export default function FavoriteButton({ igdbId, isFavorited = false }: Favorite
     <button
       onClick={handleToggle}
       disabled={loading}
-      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all duration-200 disabled:opacity-50 ${
         favorited
-          ? 'bg-red-100 text-red-800 hover:bg-red-200'
-          : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-      } disabled:opacity-50`}
+          ? 'border-red-500/50 bg-red-500/10 text-red-400'
+          : 'border-border bg-card/50 text-muted-foreground hover:border-red-500/30 hover:text-red-400'
+      }`}
     >
-      {loading ? '...' : favorited ? '❤️ Favorited' : '🤍 Favorite'}
+      <Heart className={`h-4 w-4 ${favorited ? 'fill-current' : ''}`} />
+      {loading ? 'Saving...' : favorited ? 'Favorited' : 'Favorite'}
     </button>
   );
 }

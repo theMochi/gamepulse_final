@@ -5,8 +5,12 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getGameCoverUrl } from '@/utils/img';
 import Image from 'next/image';
+import { Gamepad2, ArrowLeft, Check } from 'lucide-react';
 
 const prisma = new PrismaClient();
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function PlayedPage() {
   const session = await getServerSession(authOptions);
@@ -37,25 +41,30 @@ export default async function PlayedPage() {
       <div className="mb-8">
         <Link 
           href="/lists" 
-          className="text-blue-600 hover:text-blue-700 text-sm font-medium mb-4 inline-block"
+          className="text-primary hover:text-primary/80 text-sm font-medium mb-4 inline-flex items-center gap-1"
         >
-          ← Back to My Lists
+          <ArrowLeft className="h-4 w-4" />
+          Back to My Lists
         </Link>
-        <h1 className="text-3xl font-bold text-gray-900">Played Games</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-3xl font-display font-bold text-foreground flex items-center gap-3">
+          <Gamepad2 className="h-8 w-8 text-green-400" />
+          Played Games
+        </h1>
+        <p className="text-muted-foreground mt-2">
           {playedGames.length} {playedGames.length === 1 ? 'game' : 'games'} you have completed
         </p>
       </div>
 
       {playedGames.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
-          <div className="text-gray-400 text-6xl mb-4">🎮</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No played games yet</h3>
-          <p className="text-gray-600 mb-4">Start playing games and add them to your played list.</p>
+        <div className="bg-card rounded-xl border border-border p-12 text-center">
+          <Gamepad2 className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">No played games yet</h3>
+          <p className="text-muted-foreground mb-6">Start playing games and add them to your played list.</p>
           <Link
             href="/games"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
           >
+            <Gamepad2 className="h-4 w-4" />
             Browse Games
           </Link>
         </div>
@@ -65,7 +74,7 @@ export default async function PlayedPage() {
             <Link
               key={entry.id}
               href={`/game/${entry.game.igdbId}`}
-              className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
+              className="group bg-card rounded-xl border border-border hover:border-primary/50 transition-all duration-200 overflow-hidden hover:shadow-lg hover:shadow-primary/10"
             >
               <div className="relative aspect-[3/4] overflow-hidden">
                 <Image
@@ -75,12 +84,17 @@ export default async function PlayedPage() {
                   className="object-cover group-hover:scale-110 transition-transform duration-200"
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                 />
+                {/* Played badge */}
+                <div className="absolute top-2 right-2 bg-green-500/90 text-white px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
+                  <Check className="h-3 w-3" />
+                  Played
+                </div>
               </div>
               <div className="p-4">
-                <h3 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                <h3 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2">
                   {entry.game.name}
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   Added {new Date(entry.createdAt).toLocaleDateString()}
                 </p>
               </div>

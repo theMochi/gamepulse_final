@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { Gamepad2, Star, Check } from 'lucide-react';
 
 interface ListButtonsProps {
   igdbId: number;
@@ -12,17 +13,15 @@ interface ListButtonsProps {
 
 export default function ListButtons({ 
   igdbId, 
-  inBacklog = false, 
   inPlayed = false, 
   inWishlist = false 
 }: ListButtonsProps) {
-  const [backlog, setBacklog] = useState(inBacklog);
   const [played, setPlayed] = useState(inPlayed);
   const [wishlist, setWishlist] = useState(inWishlist);
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
 
-  const handleListToggle = async (type: 'BACKLOG' | 'PLAYED' | 'WISHLIST', currentState: boolean) => {
+  const handleListToggle = async (type: 'PLAYED' | 'WISHLIST', currentState: boolean) => {
     if (!session) return;
     
     setLoading(true);
@@ -39,9 +38,6 @@ export default function ListButtons({
 
       if (response.ok) {
         switch (type) {
-          case 'BACKLOG':
-            setBacklog(!currentState);
-            break;
           case 'PLAYED':
             setPlayed(!currentState);
             break;
@@ -61,43 +57,40 @@ export default function ListButtons({
     return null;
   }
 
+  const buttons = [
+    {
+      type: 'PLAYED' as const,
+      state: played,
+      icon: played ? Check : Gamepad2,
+      label: 'Played',
+      activeClass: 'border-green-500/50 bg-green-500/10 text-green-400',
+      inactiveClass: 'border-border bg-card/50 text-muted-foreground hover:border-green-500/30 hover:text-green-400',
+    },
+    {
+      type: 'WISHLIST' as const,
+      state: wishlist,
+      icon: Star,
+      label: 'Wishlist',
+      activeClass: 'border-yellow-500/50 bg-yellow-500/10 text-yellow-400',
+      inactiveClass: 'border-border bg-card/50 text-muted-foreground hover:border-yellow-500/30 hover:text-yellow-400',
+    },
+  ];
+
   return (
     <div className="flex flex-wrap gap-2">
-      <button
-        onClick={() => handleListToggle('BACKLOG', backlog)}
-        disabled={loading}
-        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-          backlog
-            ? 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-        } disabled:opacity-50`}
-      >
-        📋 {backlog ? 'In Backlog' : 'Add to Backlog'}
-      </button>
-      
-      <button
-        onClick={() => handleListToggle('PLAYED', played)}
-        disabled={loading}
-        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-          played
-            ? 'bg-green-100 text-green-800 hover:bg-green-200'
-            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-        } disabled:opacity-50`}
-      >
-        ✅ {played ? 'Played' : 'Mark as Played'}
-      </button>
-      
-      <button
-        onClick={() => handleListToggle('WISHLIST', wishlist)}
-        disabled={loading}
-        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-          wishlist
-            ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
-            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-        } disabled:opacity-50`}
-      >
-        🎁 {wishlist ? 'In Wishlist' : 'Add to Wishlist'}
-      </button>
+      {buttons.map((btn) => (
+        <button
+          key={btn.type}
+          onClick={() => handleListToggle(btn.type, btn.state)}
+          disabled={loading}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all duration-200 disabled:opacity-50 ${
+            btn.state ? btn.activeClass : btn.inactiveClass
+          }`}
+        >
+          <btn.icon className={`h-4 w-4 ${btn.state && btn.type === 'WISHLIST' ? 'fill-current' : ''}`} />
+          {btn.label}
+        </button>
+      ))}
     </div>
   );
 }

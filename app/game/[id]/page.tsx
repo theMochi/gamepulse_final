@@ -42,7 +42,7 @@ export default async function GamePage({ params }: GamePageProps) {
   // Get user's review and list status if logged in
   let userReview = null;
   let isFavorited = false;
-  let listStatus = { inBacklog: false, inPlayed: false, inWishlist: false };
+  let listStatus = { inPlayed: false, inWishlist: false };
 
   if (session) {
     const userId = (session as any).userId;
@@ -77,7 +77,6 @@ export default async function GamePage({ params }: GamePageProps) {
     });
 
     listStatus = {
-      inBacklog: (lists.find(l => l.type === 'BACKLOG')?.entries?.length ?? 0) > 0,
       inPlayed:  (lists.find(l => l.type === 'PLAYED')?.entries?.length ?? 0) > 0,
       inWishlist:(lists.find(l => l.type === 'WISHLIST')?.entries?.length ?? 0) > 0,
     };
@@ -228,12 +227,11 @@ export default async function GamePage({ params }: GamePageProps) {
 
           {/* User Actions */}
           {session && (
-            <div className="space-y-4 pt-4 border-t border-gray-200">
+            <div className="space-y-4 pt-4 border-t border-border">
               <div className="flex flex-wrap gap-2">
                 <FavoriteButton igdbId={gameId} isFavorited={isFavorited} />
                 <ListButtons 
                   igdbId={gameId} 
-                  inBacklog={listStatus.inBacklog}
                   inPlayed={listStatus.inPlayed}
                   inWishlist={listStatus.inWishlist}
                 />
