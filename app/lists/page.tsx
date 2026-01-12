@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import Link from 'next/link';
 import { getGameCoverUrl } from '@/utils/img';
 import Image from 'next/image';
-import { Heart, Gamepad2, Star, ListChecks, ChevronRight } from 'lucide-react';
+import { Heart, Gamepad2, Star, ListChecks, ChevronRight, Clock } from 'lucide-react';
 
 const prisma = new PrismaClient();
 
