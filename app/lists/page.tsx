@@ -86,37 +86,38 @@ export default async function ListsPage() {
     return <GuestCTA />;
   }
 
-  const userId = (session as any).userId;
+  try {
+    const userId = (session as any).userId;
 
-  // Get user's lists data
-  const [favorites, userLists, reviews] = await Promise.all([
-    // Favorites
-    prisma.favorite.findMany({
-      where: { userId },
-      include: { game: true },
-      orderBy: { createdAt: 'desc' }
-    }),
-    // Lists (Played, Wishlist)
-    prisma.list.findMany({
-      where: { userId },
-      include: {
-        entries: {
-          include: { game: true },
-          orderBy: { createdAt: 'desc' }
+    // Get user's lists data
+    const [favorites, userLists, reviews] = await Promise.all([
+      // Favorites
+      prisma.favorite.findMany({
+        where: { userId },
+        include: { game: true },
+        orderBy: { createdAt: 'desc' }
+      }),
+      // Lists (Played, Wishlist)
+      prisma.list.findMany({
+        where: { userId },
+        include: {
+          entries: {
+            include: { game: true },
+            orderBy: { createdAt: 'desc' }
+          }
         }
-      }
-    }),
-    // Reviews
-    prisma.review.findMany({
-      where: { userId },
-      include: { game: true },
-      orderBy: { createdAt: 'desc' }
-    })
-  ]);
+      }),
+      // Reviews
+      prisma.review.findMany({
+        where: { userId },
+        include: { game: true },
+        orderBy: { createdAt: 'desc' }
+      })
+    ]);
 
-  // Organize lists
-  const playedList = userLists.find(l => l.type === 'PLAYED');
-  const wishlist = userLists.find(l => l.type === 'WISHLIST');
+    // Organize lists
+    const playedList = userLists.find(l => l.type === 'PLAYED');
+    const wishlist = userLists.find(l => l.type === 'WISHLIST');
 
   const lists = [
     {
@@ -273,4 +274,27 @@ export default async function ListsPage() {
       </div>
     </div>
   );
+  } catch (error) {
+    console.error('Error loading lists:', error);
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <div className="bg-card rounded-xl border border-border p-8">
+            <div className="mb-4">
+              <ListChecks className="h-12 w-12 text-destructive mx-auto" />
+            </div>
+            <h1 className="text-2xl font-display font-bold text-foreground mb-4">
+              Error Loading Lists
+            </h1>
+            <p className="text-muted-foreground mb-6">
+              {error instanceof Error ? error.message : 'Failed to load your lists. Please try again later.'}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              If this persists, check your database connection settings.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }

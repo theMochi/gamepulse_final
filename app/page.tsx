@@ -20,6 +20,10 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Force dynamic rendering for Vercel
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // ============================================================================
 // MOCK DATA
 // ============================================================================
